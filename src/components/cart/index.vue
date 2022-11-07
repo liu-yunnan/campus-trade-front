@@ -11,7 +11,8 @@
       <van-swipe-cell :right-width="50" v-for="goods in state.list" :key="goods.id">
         <div class="goods_item">
           <van-checkbox :name="goods.id" />
-          <van-card :price="goods.price" :desc="goods.detail" :title="goods.name" :thumb="goods.images[0]" />
+          <van-card @click="showGoods(goods.id)" :price="goods.price" :desc="goods.detail" :title="goods.name"
+            :thumb="goods.images[0]" />
         </div>
         <template #right>
           <van-button icon="delete" type="danger" class="delete-button" @click="deleteGood(goods.id)" />
@@ -34,7 +35,13 @@ import { Toast } from 'vant';
 import { reactive, ref } from 'vue';
 import router from '../../router';
 const onClickLeft = () => router.push({ path: '/' });
-const onSubmit = () => console.log('提交');
+const onSubmit = () => {
+  if (state.selected.length > 0) {
+    console.log('提交');
+  } else {
+    console.log('未选中商品');
+  }
+}
 const goTo = () => router.push({ path: '/' })
 
 type Good = {
@@ -104,7 +111,15 @@ const init = async () => {
   // state.result = data.map(item => item.cartItemId)
   Toast.clear()
 }
-
+const showGoods = (goodsId: string) => {
+  // console.log(goodsId);
+  router.push({
+    name: "GoodsItem",
+    query: {
+      id: goodsId
+    }
+  })
+}
 const deleteGood = async (id: string) => {
   // await deleteCartItem(id)
   // store.dispatch('updateCart')
@@ -188,10 +203,12 @@ const allCheck = () => {
   }
 }
 
-::v-deep .van-button--danger {
-  height: 100%;
-  border-radius: 0.1rem;
-  margin-left: -0px;
+::v-deep .van-swipe-cell__right {
+  .van-button--danger {
+    height: 100%;
+    border-radius: 0.1rem;
+    margin-left: -0px;
+  }
 }
 
 .empty {

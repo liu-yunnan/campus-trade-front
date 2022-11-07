@@ -1,15 +1,15 @@
 <template>
   <div>
     <van-nav-bar fixed title="商品详情" left-text="返回" left-arrow @click-left="onClickLeft" />
-    <div class="gooditem">
+    <div class="goodsitem">
       <!-- 用户 -->
-      <div class="gooditem_user">
-        <div class="gooditem_user_head">
+      <div class="goodsitem_user">
+        <div class="goodsitem_user_head">
           <van-image round width=".4rem" height=".4rem" fit="cover" :src="good.user.head" />
         </div>
-        <div class="gooditem_user_detail">
-          <p class="gooditem_user_detail_name">{{ good.user.name }}</p>
-          <p class="gooditem_user_detail_QQ">QQ: {{ good.user.tel }}</p>
+        <div class="goodsitem_user_detail">
+          <p class="goodsitem_user_detail_name">{{ good.user.name }}</p>
+          <p class="goodsitem_user_detail_QQ">QQ: {{ good.user.tel }}</p>
         </div>
       </div>
       <!-- 分割线 -->
@@ -17,16 +17,16 @@
         商品详情
       </van-divider>
       <!-- 商品详情 -->
-      <div class="gooditem_money">
+      <div class="goodsitem_money">
         <span>￥{{ good.price }}</span>
       </div>
 
-      <div class="gooditem_n">
-        <pre class="gooditem_n_name">{{ good.name }}</pre>
-        <pre class="gooditem_n_detail">{{ good.detail }}</pre>
+      <div class="goodsitem_n">
+        <pre class="goodsitem_n_name">{{ good.name }}</pre>
+        <pre class="goodsitem_n_detail">{{ good.detail }}</pre>
       </div>
 
-      <div class="gooditem_image">
+      <div class="goodsitem_image">
         <img v-for="image in good.images" :src="image" :key="image" alt="" srcset="">
       </div>
 
@@ -85,7 +85,7 @@ const onClickLeft = () => history.back();
 </script>
 
 <style scoped lang="scss">
-.gooditem {
+.goodsitem {
   margin-top: .5rem;
 
   &_user {

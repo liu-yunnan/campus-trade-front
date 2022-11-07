@@ -112,7 +112,7 @@ const addGood = (goodId: string) => {
 const showGood = (goodId: string) => {
   // console.log(goodId);
   router.push({
-    name: "GoodItem",
+    name: "GoodsItem",
     query: {
       id: goodId
     }
@@ -194,7 +194,7 @@ const onRefresh = () => {
       padding-right: .075rem;
 
       span {
-        font-size: .18rem;
+        font-size: 0.14rem;
         color: #FF4422;
         font-weight: bold;
       }
