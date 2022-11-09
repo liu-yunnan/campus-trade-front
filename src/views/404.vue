@@ -1,6 +1,6 @@
 <template>
   <h1>404 not found</h1>
-  <van-button plain type="primary" to="/">返回首页</van-button>
+  <van-button plain color="#ffdb46" type="primary" to="/">返回首页</van-button>
 </template>
 
 <script lang="ts">

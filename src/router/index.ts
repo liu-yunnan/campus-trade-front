@@ -29,6 +29,18 @@ const routes: Array<RouteRecordRaw> = [
         name:'Categories',
         component:()=>import('@/components/goods/categories.vue')
     },
+    // 分类商品列表
+    {
+        path:'/category-list',
+        name:'CategoryList',
+        component:()=>import('@/components/goods/categoryList.vue')
+    },
+    // 搜索页
+    {
+        path:'/search',
+        name:'Search',
+        component:()=>import('@/components/goods/searchGoods.vue')
+    },
 
     // 添加商品
     {
@@ -67,6 +79,12 @@ const routes: Array<RouteRecordRaw> = [
         component:()=>import('@/components/userCenter/changePwd.vue')
     },
 
+    // 登录注册
+    {
+        path:'/login',
+        name:'Login',
+        component:()=>import('@/components/login.vue')
+    },
 
     {
         path: '/404',

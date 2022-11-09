@@ -106,8 +106,8 @@ let goodsList = reactive<Array<Good>>([
     price: 20
   }
 ])
-const addGood = (goodId: string) => {
-  console.log(goodId);
+const addGood = (goodsId: string) => {
+  console.log(goodsId);
 }
 const showGood = (goodId: string) => {
   // console.log(goodId);
@@ -157,9 +157,9 @@ const onRefresh = () => {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  width: 3.7rem;
   background: #f6f6f6;
   margin-bottom: .4rem;
+  padding-top: .05rem;
 
   &_item {
     width: 46%;

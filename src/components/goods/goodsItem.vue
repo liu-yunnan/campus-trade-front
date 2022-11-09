@@ -35,16 +35,16 @@
     </div>
     <van-action-bar>
       <!-- <van-action-bar-icon icon="chat-o" text="聊一聊" /> -->
-      <van-action-bar-icon icon="cart-o" text="购物车" />
-      <van-action-bar-button type="warning" text="加入购物车" />
-      <van-action-bar-button type="danger" text="立即购买" />
+      <van-action-bar-icon icon="cart-o" text="购物车" @click="goToCart" />
+      <van-action-bar-button @click="addGoods" type="warning" text="加入购物车" />
+      <van-action-bar-button @click="submit" type="danger" text="立即购买" />
     </van-action-bar>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type } from 'os';
 import { LocationQueryValue } from 'vue-router';
+import router from '../../router';
 let route = useRoute();
 let id = route.query.id as LocationQueryValue
 type User = {
@@ -61,8 +61,16 @@ type Good = {
   price: number,
   user: User,
 }
-
-const getGood = (id: LocationQueryValue) => {
+const addGoods = () => {
+  console.log(id);
+}
+const submit = () => {
+  console.log(id);
+}
+const goToCart = () => {
+  router.push({ name: 'Cart' })
+}
+const getGoods = (id: LocationQueryValue) => {
   let good: Good = {
     id: '002',
     images: ['https://imgservice.suning.cn/uimg1/b2c/image/Qk4Wz2xVcIM3lNkEjjUiRQ.jpg_800w_800h_4e_80Q_is', 'https://imgservice.suning.cn/uimg1/b2c/image/V3VOqtKUO7XYdzD5T7pd3g.jpg_800w_800h_4e_80Q_is', 'https://imgservice.suning.cn/uimg1/b2c/image/Zr_Fg0gAWDwIeJ7oya7qeA.jpg_800w_800h_4e_80Q_is'],
@@ -79,7 +87,7 @@ const getGood = (id: LocationQueryValue) => {
   console.log(id);
   return good
 }
-let good: Good = getGood(id)
+let good: Good = getGoods(id)
 console.log(id);
 const onClickLeft = () => history.back();
 </script>
@@ -160,5 +168,9 @@ const onClickLeft = () => history.back();
     }
   }
 
+}
+
+::v-deep .van-action-bar {
+  bottom: .45rem;
 }
 </style>

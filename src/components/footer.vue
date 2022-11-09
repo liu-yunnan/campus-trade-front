@@ -30,7 +30,7 @@ const active = ref(0);
 ::v-deep .van-tabbar {
 
   &-item {
-    padding-bottom: 10px;
+    padding-bottom: .05rem;
 
     // display: flex;
     &__text {

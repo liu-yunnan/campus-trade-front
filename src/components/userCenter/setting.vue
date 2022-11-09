@@ -5,7 +5,6 @@
     <div class="input-item">
       <van-field v-model="state.userName" label="用户名" />
       <van-field v-model="state.QQ" label="QQ" />
-      <van-field v-model="state.tel" label="电话" />
       <van-field v-model="state.introduceSign" label="个性签名" />
     </div>
     <van-button round class="save-btn" color="#ffdb46" type="primary" @click="save" block>保存</van-button>

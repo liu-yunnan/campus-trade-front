@@ -6,7 +6,7 @@
   <div class="wrap">
     <div class="header">
       <div class="header_top">
-        <div class="header_top_iconbox" @click="goCategories()">
+        <div class="header_top_iconbox" @click="goTo('/categories')">
           <span class="iconfont">&#xe62f;</span>
           <span class="txt">分类</span>
         </div>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="header_saerchbox">
-        <van-search shape="round" background="rgb(0, 0, 0, 0)" placeholder="请输入搜索关键词" />
+        <van-search shape="round" background="rgb(0, 0, 0, 0)" placeholder="请输入搜索关键词" @click="goTo('/search')" />
       </div>
     </div>
 
@@ -35,23 +35,23 @@
         <img src="@/assets/img/swiper2.gif" alt="">
       </div> -->
       <div class="iconlist">
-        <div class="iconlist_item">
+        <div class="iconlist_item" @click="selectProduct(86)">
           <img src="@/assets/img/化妆护肤.png">
           <span>生活日用</span>
         </div>
-        <div class="iconlist_item">
+        <div class="iconlist_item" @click="selectProduct(98)">
           <img src="@/assets/img/服装饰品.png">
           <span>服装饰品</span>
         </div>
-        <div class="iconlist_item">
+        <div class="iconlist_item" @click="selectProduct(80)">
           <img src="@/assets/img/电子产品.png">
           <span>电子产品</span>
         </div>
         <div class="iconlist_item">
-          <img src="@/assets/img/其他.png">
+          <img src="@/assets/img/其他.png" @click="selectProduct()">
           <span>其他分类</span>
         </div>
-        <div class="iconlist_item">
+        <div class="iconlist_item" @click="goToPublish">
           <img src="@/assets/img/发布商品.png">
           <span>发布商品</span>
         </div>
@@ -85,15 +85,30 @@ export default defineComponent({
       })
     }
     const goUserCenter = () => {
+      // 需要先判断用户的登录状态,如果没登录需要跳转到登录页
+      // router.push({
+      //   name: "UserCenter",
+      // })
       router.push({
-        name: "UserCenter",
+        name: "Login",
       })
     }
+    const selectProduct = (id?: number) => {
+      // 鉴权
+      router.push({ path: '/search', query: { categoryId: id } })
+    }
+    const goToPublish = () => {
+      router.push({ path: '/publishGoods' })
+    }
+    const goTo = (r: any, query?: any) => router.push({ path: r, query: query || {} })
     return {
       images,
       getImageUrl,
       goCategories,
-      goUserCenter
+      goUserCenter,
+      goTo,
+      selectProduct,
+      goToPublish
     };
   },
   components: { GoodsList }

@@ -15,7 +15,7 @@
             :thumb="goods.images[0]" />
         </div>
         <template #right>
-          <van-button icon="delete" type="danger" class="delete-button" @click="deleteGood(goods.id)" />
+          <van-button icon="delete" type="danger" class="delete-button" @click="deleteGoods(goods.id)" />
         </template>
       </van-swipe-cell>
 
@@ -120,7 +120,7 @@ const showGoods = (goodsId: string) => {
     }
   })
 }
-const deleteGood = async (id: string) => {
+const deleteGoods = async (id: string) => {
   // await deleteCartItem(id)
   // store.dispatch('updateCart')
   console.log("删除");
