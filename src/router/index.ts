@@ -29,12 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         name:'Categories',
         component:()=>import('@/components/goods/categories.vue')
     },
-    // 分类商品列表
-    {
-        path:'/category-list',
-        name:'CategoryList',
-        component:()=>import('@/components/goods/categoryList.vue')
-    },
+    
     // 搜索页
     {
         path:'/search',
