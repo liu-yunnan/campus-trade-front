@@ -5,7 +5,7 @@
 
     <van-list class="goodslist" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-cell class="goodslist_item" v-for="good in goodsList" :key="good.id" @click="showGood(good.id)">
-        <van-image width="1.7rem" height="1.5rem" fit="cover" :src="getImageUrl(good.images[0])" />
+        <van-image width="1.8rem" height="1.5rem" fit="cover" :src="getImageUrl(good.images[0])" />
         <p>{{ good.name }}</p>
         <div class="money">
           <span>￥{{ good.price }}</span>

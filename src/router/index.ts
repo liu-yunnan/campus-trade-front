@@ -43,7 +43,12 @@ const routes: Array<RouteRecordRaw> = [
         name:'PublishGoods',
         component:()=>import('@/components/goods/publishGoods.vue')
     },
-
+    // 编辑商品
+    {
+        path:'/update',
+        name:'UpdatePublish',
+        component:()=>import('@/components/userCenter/updatePublish.vue')
+    },
     // 用户区域
     {
         path:'/userCenter',

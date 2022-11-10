@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     SearchGoods: typeof import('./src/components/goods/searchGoods.vue')['default']
     Setting: typeof import('./src/components/userCenter/setting.vue')['default']
     Undefined: typeof import('./src/components/index.vue')['default']
+    UpdatePublish: typeof import('./src/components/userCenter/updatePublish.vue')['default']
     UserCenter: typeof import('./src/components/userCenter/index.vue')['default']
     VanActionBar: typeof import('vant/es')['ActionBar']
     VanActionBarButton: typeof import('vant/es')['ActionBarButton']
@@ -32,6 +33,8 @@ declare module '@vue/runtime-core' {
     VanCheckbox: typeof import('vant/es')['Checkbox']
     VanCheckboxGroup: typeof import('vant/es')['CheckboxGroup']
     VanDivider: typeof import('vant/es')['Divider']
+    VanDropdownItem: typeof import('vant/es')['DropdownItem']
+    VanDropdownMenu: typeof import('vant/es')['DropdownMenu']
     VanField: typeof import('vant/es')['Field']
     VanForm: typeof import('vant/es')['Form']
     VanIcon: typeof import('vant/es')['Icon']
@@ -47,5 +50,6 @@ declare module '@vue/runtime-core' {
     VanSwipeItem: typeof import('vant/es')['SwipeItem']
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
+    VanTag: typeof import('vant/es')['Tag']
   }
 }
