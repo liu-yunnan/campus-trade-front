@@ -8,13 +8,13 @@
       <div class="header_top">
         <div class="header_top_iconbox" @click="goTo('/categories')">
           <span class="iconfont">&#xe62f;</span>
-          <span class="txt">分类</span>
+          <!-- <span class="txt">分类</span> -->
         </div>
         <!-- <img class="header_top_img" src="@/assets/img/headerbanner.png" alt=""> -->
         <div class="header_top_img">Campus Trade</div>
         <div class="header_top_iconbox" @click="goUserCenter()">
           <span class="iconfont">&#xe62b;</span>
-          <span class="txt">个人中心</span>
+          <!-- <span class="txt">个人中心</span> -->
         </div>
       </div>
       <div class="header_saerchbox">
@@ -126,7 +126,7 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .04rem .09rem 0 .09rem;
+    padding: .04rem .14rem 0 .1rem;
 
     &_iconbox {
       display: flex;

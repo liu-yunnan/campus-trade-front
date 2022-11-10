@@ -3,6 +3,7 @@
     <van-nav-bar fixed :title="state.type === 'login' ? '登录' : '注册'" />
 
     <img class="logo" src="@/assets/img/登录@1x.png" alt="">
+    <!-- 登录 -->
     <div v-if="state.type == 'login'" class="login-body">
       <van-form @submit="onSubmit">
         <van-field v-model="state.username" name="username" label="手机号" placeholder="手机号"
@@ -15,12 +16,17 @@
         </div>
       </van-form>
     </div>
+
+
+    <!-- 注册 -->
     <div v-else class="login-body">
       <van-form @submit="onSubmit">
         <van-field v-model="state.username1" name="username1" label="手机号" placeholder="手机号"
-          :rules="[{ required: true, message: '请填写手机号' }]" />
+          :rules="[{ validator: validator1, required: true, message: '手机号号格式不正确' }]" />
         <van-field v-model="state.password1" type="password" name="password1" label="密码" placeholder="密码"
-          :rules="[{ required: true, message: '请填写密码' }]" />
+          :rules="[{ validator: validator2, required: true, message: '密码必须包含数字、大写或小写字母' }]" />
+        <van-field v-model="state.confirmPassword1" type="password" name="confirmPassword1" label="确认密码"
+          placeholder="确认密码" :rules="[{ validator: validator2, required: true, message: '密码必须包含数字、大写或小写字母' }]" />
         <div class="btn_box">
           <div class="link-login" @click="toggle('login')">已有登录账号</div>
           <van-button round block color="#ffdb46" native-type="submit">注册</van-button>
@@ -35,11 +41,14 @@ import { Toast } from 'vant';
 import { setLocal } from '../common/common';
 
 const verifyRef = ref(null)
+const validator1 = (val: string) => /1\d{10}/.test(val);
+const validator2 = (val: string) => /^.*(?=.*[0-9])(?=.*[A-Z])|(?=.*[a-z])\w{6,16}/.test(val);
 const state = reactive({
   username: '',
   password: '',
   username1: '',
   password1: '',
+  confirmPassword1: '',
   type: 'login',
 })
 
@@ -60,6 +69,28 @@ const onSubmit = async (values: { username1: any; password1: any; }) => {
     // 需要刷新页面，否则 axios.js 文件里的 token 不会被重置
     window.location.href = '/'
   } else {
+    if (state.username1 === '') {
+      Toast('请输入手机号')
+      return false
+    }
+    if (state.confirmPassword1 === '') {
+      Toast('请确认密码');
+      return false
+    }
+    if (state.password1 !== state.confirmPassword1) {
+      Toast('密码不一致，请重新输入');
+      state.password1 = '';
+      state.confirmPassword1 = '';
+      return false;
+    }
+    let len = state.password1.length
+    if (len > 16 || len < 6 && len > 0) {
+      Toast('密码长度为6~16，请重新输入');
+      // state.password = '';
+      state.password = '';
+      state.confirmPassword1 = '';
+      return false
+    }
     // await register({
     //   "loginName": values.username1,
     //   "password": values.password1
