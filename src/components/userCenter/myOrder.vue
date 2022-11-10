@@ -31,10 +31,11 @@
           ￥{{ order.totalPrice }}
         </div>
         <div class="footer_btn">
-          <van-button :disabled="getTag(order.tag, 1)" plain type="primary" size="mini" @click="dialog(order.orderId)">
+          <van-button :disabled="getTag(order.tag, 1)" color="#ffdb46" type="primary" size="mini"
+            @click="dialog(order.orderId)">
             支付
           </van-button>
-          <van-button :disabled="getTag(order.tag, 2)" plain type="danger" size="mini">取消订单
+          <van-button :disabled="getTag(order.tag, 2)" plain size="mini">取消订单
           </van-button>
         </div>
       </div>

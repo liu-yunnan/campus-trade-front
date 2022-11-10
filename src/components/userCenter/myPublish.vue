@@ -19,11 +19,11 @@
         <div>{{ item.date }}</div>
       </template>
       <template #footer>
-        <van-button :disabled="getTag(item.tag, 1)" plain type="primary" size="mini" @click="upGoods(item.id)">上架
+        <van-button :disabled="getTag(item.tag, 1)" size="mini" @click="upGoods(item.id)">上架
         </van-button>
-        <van-button :disabled="getTag(item.tag, 2)" type="danger" plain size="mini" @click="downGoods(item.id)">下架
+        <van-button :disabled="getTag(item.tag, 2)" size="mini" @click="downGoods(item.id)">下架
         </van-button>
-        <van-button :disabled="getTag(item.tag, 3)" size="mini" plain type="success" @click="updateGoods(item.id)">编辑
+        <van-button :disabled="getTag(item.tag, 3)" size="mini" @click="updateGoods(item.id)">编辑
         </van-button>
       </template>
     </van-card>
@@ -158,7 +158,7 @@ const onClickLeft = () => history.back();
 }
 
 .main {
-  padding: 0 .1rem .46rem;
+  padding: 0 .1rem .5rem;
   // background: #f6f6f6;
   // height: 100%;
 
@@ -166,7 +166,8 @@ const onClickLeft = () => history.back();
     background: white;
     border-radius: .1rem;
     box-shadow: 4px 4px 6px #f4f4f4, -2px -2px 2px #f4f4f4;
-    margin-top: .1rem;
+    margin-top: .15rem;
+    padding: .16rem;
 
     &__footer {
       flex: none;
