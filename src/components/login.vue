@@ -1,6 +1,7 @@
 <template>
   <div>
-    <van-nav-bar fixed :title="state.type === 'login' ? '登录' : '注册'" />
+    <van-nav-bar fixed left-text="返回" left-arrow @click-left="onClickLeft"
+      :title="state.type === 'login' ? '登录' : '注册'" />
 
     <img class="logo" src="@/assets/img/登录@1x.png" alt="">
     <!-- 登录 -->
@@ -39,6 +40,7 @@
 <script setup lang="ts">
 import { Toast } from 'vant';
 import { setLocal } from '../common/common';
+import router from '../router';
 
 const verifyRef = ref(null)
 const validator1 = (val: string) => /1\d{10}/.test(val);
@@ -99,6 +101,7 @@ const onSubmit = async (values: { username1: any; password1: any; }) => {
     state.type = 'login'
   }
 }
+const onClickLeft = () => router.push({ path: '/' });
 </script>
 
 <style scoped lang="scss">
@@ -114,12 +117,13 @@ const onSubmit = async (values: { username1: any; password1: any; }) => {
 }
 
 .btn_box {
-  margin: .2rem .1rem;
-  display: flex;
-  align-items: center;
+  margin: .2rem .14rem;
+  // display: flex;
+  // align-items: center;
 
   .link-register,
   .link-login {
+    margin-bottom: .14rem;
     font-size: 14px;
     width: 2rem;
     color: #1989fa;

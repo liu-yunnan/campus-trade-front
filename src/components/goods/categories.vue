@@ -43,7 +43,6 @@
 import { ref } from 'vue';
 import { Toast } from 'vant';
 import router from '../../router';
-import { type } from 'os';
 const goHome = () => {
   router.push({ path: '/' })
 }

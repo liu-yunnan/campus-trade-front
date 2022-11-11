@@ -22,35 +22,25 @@
     </van-checkbox-group>
 
   </div>
-  <van-submit-bar v-if="state.list.length > 0" class="submit" :price="total * 100" button-text="提交订单"
-    @submit="onSubmit">
-    <van-checkbox @click="allCheck" v-model:checked="state.checkAll">全选</van-checkbox>
+  <van-submit-bar v-if="state.list.length > 0" class="submit" :price="total * 100" button-text="提交订单" @click="onSubmit">
+    <van-checkbox @click.stop="allCheck" v-model:checked="state.checkAll">全选</van-checkbox>
   </van-submit-bar>
 
+  <!-- 弹出层：地址编辑 -->
+  <van-popup v-model:show="show" position="bottom" closeable round :style="{ height: '60%' }">
+    <van-address-edit :style="{ padding: '52px 20px' }" :area-list="areaList" save-button-text="提交"
+      :area-columns-placeholder="['请选择', '请选择', '请选择']" @save="onSave" />
+  </van-popup>
   <Footer></Footer>
 </template>
 
 <script setup lang="ts">
 import { Toast } from 'vant';
+import { areaList } from '@vant/area-data';
 import { reactive, ref } from 'vue';
 import router from '../../router';
 const onClickLeft = () => router.push({ path: '/' });
-const onSubmit = () => {
-  if (state.selected.length > 0) {
-    console.log('提交');
-  } else {
-    console.log('未选中商品');
-  }
-}
-const goTo = () => router.push({ path: '/' })
-
-type Good = {
-  id: string
-  images: Array<string>,
-  name: string,
-  detail: string
-  price: number
-}
+const show = ref(false);
 let goodsList = reactive<Array<Good>>([
   {
     id: '001',
@@ -81,7 +71,6 @@ let goodsList = reactive<Array<Good>>([
     price: 20
   }
 ])
-
 const state = reactive({
   checked: false,
   // list: new Array<Good>(),
@@ -90,6 +79,37 @@ const state = reactive({
   selected: new Array<string>(),
   checkAll: false
 })
+const onSave = (content: any) => {
+  Toast('save');
+  // console.log(state.selected);
+  console.log(content);
+  show.value = !show.value; //如果成功，则关闭弹窗
+}
+
+const showPopup = () => {
+  show.value = true;
+};
+const onSubmit = () => {
+  if (state.selected.length > 0) {
+    console.log('提交');
+    console.log(state.selected);
+    showPopup()
+  } else {
+    console.log('未选中商品');
+  }
+}
+const goTo = () => router.push({ path: '/' })
+
+type Good = {
+  id: string
+  images: Array<string>,
+  name: string,
+  detail: string
+  price: number
+}
+
+
+
 
 const total = computed(() => {
   let sum = 0
@@ -234,5 +254,13 @@ const allCheck = () => {
 
 .submit {
   margin-bottom: .45rem;
+}
+
+::v-deep .van-popup {
+
+  .van-form,
+  .van-address-edit {
+    padding: 52px 20px;
+  }
 }
 </style>
