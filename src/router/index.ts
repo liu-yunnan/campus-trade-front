@@ -68,6 +68,12 @@ const routes: Array<RouteRecordRaw> = [
         name:'MyOrder',
         component:()=>import('@/components/userCenter/myOrder.vue')
     },
+    // 订单详情
+    {
+        path:'/orderDetail',
+        name:'OrderDetail',
+        component:()=>import('@/components/userCenter/orderDetail.vue')
+    },
     {
         path:'/myPublish',
         name:'MyPublish',

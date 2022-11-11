@@ -1,10 +1,9 @@
 <template>
   <van-nav-bar fixed title="我发布的商品" left-text="返回" left-arrow @click-left="onClickLeft" />
   <div class="select_box">
-    <van-dropdown-menu active-color="#1989fa">
-      <van-dropdown-item v-model="state.value1" :options="option1" />
-      <van-dropdown-item v-model="state.value2" :options="option2" />
-    </van-dropdown-menu>
+    <van-cell title="选择日期区间" :value="state.timeArr" @click="state.show = true" />
+    <van-calendar v-model:show="state.show" type="range" @confirm="onConfirm" color="#ffdb46"
+      :min-date="new Date(2021, 1, 1)" />
   </div>
   <div class="main">
     <!-- 我发布的商品 -->
@@ -47,22 +46,16 @@ const getImageUrl = (name: string) => {
 };
 const state = reactive({
   goodsList: new Array<Good>(),
-  value1: 0,
-  value2: 'a'
+  timeArr: '',
+  show: false,
 })
-const option1 = [
-  { text: '全部商品', value: 0 },
-  { text: '已上架', value: 1 },
-  { text: '已下架', value: 2 },
-  { text: '已售出', value: 3 },
-
-];
-const option2 = [
-  { text: '时间降序', value: 'a' },
-  { text: '时间升序', value: 'b' },
-  { text: '价格升序', value: 'c' },
-  { text: '价格降序', value: 'd' },
-];
+const formatDate = (date: any) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+const onConfirm = (values: [any, any]) => {
+  const [start, end] = values;
+  state.show = false;
+  state.timeArr = `${formatDate(start)} - ${formatDate(end)}`;
+  // 获取日期区间的订单
+};
 
 state.goodsList = reactive<Array<Good>>([
   {

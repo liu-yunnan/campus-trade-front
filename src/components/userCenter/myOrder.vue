@@ -1,13 +1,12 @@
 <template>
   <van-nav-bar fixed title="我的订单" left-text="返回" left-arrow @click-left="onClickLeft" />
   <div class="select_box">
-    <van-dropdown-menu active-color="#1989fa">
-      <van-dropdown-item v-model="state.value1" :options="option1" />
-      <van-dropdown-item v-model="state.value2" :options="option2" />
-    </van-dropdown-menu>
+    <van-cell title="选择日期区间" :value="state.timeArr" @click="state.show = true" />
+    <van-calendar v-model:show="state.show" lazy-render :show-confirm="false" type="range" @confirm="onConfirm"
+      color="#ffdb46" :min-date="new Date(2021, 1, 1)" />
   </div>
   <div class="main">
-    <div class="order_cart" v-for="order in state.orderList" :key="order.orderId">
+    <div class="order_cart" v-for="order in state.orderList" :key="order.orderId" @click="showOrder(order.orderId)">
       <div class="header">
         <div class="header_tag">
           <van-tag plain type="danger" size="medium">{{ order.tag === 0 ? '未支付' : order.tag === 1 ? '已支付' : order.tag
@@ -21,7 +20,7 @@
         </div>
       </div>
       <van-card v-for="item in order.goodsList" :key="item.id" :price="item.price" :desc="item.detail"
-        :title="item.name" :thumb="getImageUrl(item.images[0])" @click-thumb="showGoods(item.id)">
+        :title="item.name" :thumb="getImageUrl(item.images[0])">
         <template #price-top>
           <div>{{ item.date }}</div>
         </template>
@@ -31,11 +30,11 @@
           ￥{{ order.totalPrice }}
         </div>
         <div class="footer_btn">
-          <van-button :disabled="getTag(order.tag, 1)" color="#ffdb46" type="primary" size="mini"
+          <van-button :disabled="getTag(order.tag)" color="#ffdb46" type="primary" size="mini"
             @click="dialog(order.orderId)">
             支付
           </van-button>
-          <van-button :disabled="getTag(order.tag, 2)" plain size="mini">取消订单
+          <van-button :disabled="getTag(order.tag)" plain size="mini">取消订单
           </van-button>
         </div>
       </div>
@@ -133,19 +132,17 @@ const state = reactive({
     totalPrice: 40,
   },
   ],
-  value1: 0,
-  value2: 'a'
+  timeArr: '',
+  show: false,
 })
-const option1 = [
-  { text: '全部订单', value: 0 },
-  { text: '未支付', value: 1 },
-  { text: '已支付', value: 2 },
-  { text: '已取消', value: 3 },
-];
-const option2 = [
-  { text: '时间降序', value: 'a' },
-  { text: '时间升序', value: 'b' },
-];
+const formatDate = (date: any) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+const onConfirm = (values: [any, any]) => {
+  const [start, end] = values;
+  state.show = false;
+  state.timeArr = `${formatDate(start)} - ${formatDate(end)}`;
+  // 获取日期区间的订单
+};
+// 支付确认
 const dialog = (id: string) => {
   Dialog.confirm({
     message:
@@ -158,7 +155,7 @@ const dialog = (id: string) => {
       // on cancel
     });
 }
-const getTag = (tag: number, btn: 1 | 2) => {
+const getTag = (tag: number) => {
   // btn 1：支付 2:取消订单
   if (tag === 0) { //未支付
     return false
@@ -173,12 +170,11 @@ const getTag = (tag: number, btn: 1 | 2) => {
     return true
   }
 }
-const showGoods = (goodId: string) => {
-  // console.log(goodId);
+const showOrder = (id: string) => {
   router.push({
-    name: "GoodsItem",
+    name: "OrderDetail",
     query: {
-      id: goodId
+      id: id
     }
   })
 }

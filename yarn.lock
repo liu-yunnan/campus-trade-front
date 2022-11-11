@@ -52,6 +52,11 @@
   "resolved" "https://registry.npmjs.org/@types/node/-/node-18.11.8.tgz"
   "version" "18.11.8"
 
+"@vant/area-data@^1.3.2":
+  "integrity" "sha512-KHGvvIxApxCXDTzsh5hPsIVrF4ll5J3pNgYNL3lmNJxye7aWySK97EgXiprVee+FshVa1jVW4esJ7VyW0l94WQ=="
+  "resolved" "https://registry.npmjs.org/@vant/area-data/-/area-data-1.3.2.tgz"
+  "version" "1.3.2"
+
 "@vant/icons@^1.8.0":
   "integrity" "sha512-sKfEUo2/CkQFuERxvkuF6mGQZDKu3IQdj5rV9Fm0weJXtchDSSQ+zt8qPCNUEhh9Y8shy5PzxbvAfOOkCwlCXg=="
   "resolved" "https://registry.npmjs.org/@vant/icons/-/icons-1.8.0.tgz"
