@@ -4,7 +4,7 @@
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
     <van-list class="goodslist" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <van-cell class="goodslist_item" v-for="good in goodsList" :key="good.id" @click="showGood(good.id)">
+      <van-cell class="goodslist_item" v-for="good in goodsList" :key="good.id" @click="showGoods(good.id)">
         <van-image width="1.8rem" height="1.5rem" fit="cover" :src="getImageUrl(good.images[0])" />
         <p>{{ good.name }}</p>
         <div class="money">
@@ -18,49 +18,6 @@
 
     </van-list>
   </van-pull-refresh>
-
-
-  <!-- <div class="goodslist_item" v-for="(good, id) in goodsList" :key="id" @click="showGood(good.id)">
-      <img :src="getImageUrl(good.images[0])" alt="" srcset="">
-      <van-image width="1.7rem" height="1.5rem" fit="cover" :src="getImageUrl(good.images[0])" />
-      <p>{{ good.name }}</p>
-      <div class="money">
-        <span>￥{{ good.price }}</span>
-        <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)"
-          @click.stop="addGood(good.id)">
-          加购
-        </van-button>
-      </div>
-    </div> -->
-
-  <!-- <div class="goodslist_item">
-      <img src="@/assets/img/面霜.png" alt="" srcset="">
-      <p>宝宝面霜润肤保湿滋润婴童润肤霜</p>
-      <div class="money">
-        <span>￥{{ 2000 }}</span>
-        <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)">加购</van-button>
-      </div>
-    </div> -->
-
-  <!-- <div class="goodslist_item">
-      <img src="@/assets/img/ipad.jpeg" alt="" srcset="">
-      <p>ipad 2020 99新 小天鹅(LittleSwan)本色系列 蓝氧特渍净 10KG滚筒洗衣机全自动洗烘一体 纤薄自由嵌TD100MS9ILZ</p>
-      <div class="money">
-        <span>￥{{ 2000 }}</span>
-        <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)">加购</van-button>
-      </div>
-    </div>
-
-    <div class="goodslist_item">
-      <img src="@/assets/img/ipad.jpeg" alt="" srcset="">
-      <p>ipad 2020 99新 小天鹅(LittleSwan)本色系列 蓝氧特渍净 10KG滚筒洗衣机全自动洗烘一体 纤薄自由嵌TD100MS9ILZ</p>
-      <div class="money">
-        <span>￥{{ 2000 }}</span>
-        <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)">加购</van-button>
-      </div>
-    </div> -->
-
-  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
@@ -109,12 +66,12 @@ let goodsList = reactive<Array<Good>>([
 const addGood = (goodsId: string) => {
   console.log(goodsId);
 }
-const showGood = (goodId: string) => {
+const showGoods = (goodsId: string) => {
   // console.log(goodId);
   router.push({
     name: "GoodsItem",
     query: {
-      id: goodId
+      id: goodsId
     }
   })
 }

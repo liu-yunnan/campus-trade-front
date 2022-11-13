@@ -40,9 +40,16 @@
       <van-action-bar-button @click="submit" type="danger" text="立即购买" />
     </van-action-bar>
   </div>
+  <!-- 弹出层：地址编辑 -->
+  <van-popup v-model:show="show" position="bottom" closeable round :style="{ height: '60%' }">
+    <van-address-edit :style="{ padding: '52px 20px' }" :area-list="areaList" save-button-text="提交"
+      :area-columns-placeholder="['请选择', '请选择', '请选择']" @save="onSave" />
+  </van-popup>
 </template>
 
 <script setup lang="ts">
+import { areaList } from '@vant/area-data';
+import { Toast } from 'vant';
 import { LocationQueryValue } from 'vue-router';
 import router from '../../router';
 let route = useRoute();
@@ -61,11 +68,22 @@ type Good = {
   price: number,
   user: User,
 }
+const show = ref(false);
+const onSave = (content: any) => {
+  Toast('save');
+  console.log(id);
+  console.log(content);
+  show.value = !show.value; //如果成功，则关闭弹窗
+}
+const showPopup = () => {
+  show.value = true;
+};
 const addGoods = () => {
   console.log(id);
 }
 const submit = () => {
   console.log(id);
+  showPopup()
 }
 const goToCart = () => {
   router.push({ name: 'Cart' })
