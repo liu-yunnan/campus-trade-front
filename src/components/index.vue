@@ -69,6 +69,7 @@
 import { defineComponent } from "vue"
 import GoodsList from "./goods/goodsList.vue"
 import router from "../router"
+import { test } from "@/service/user";
 export default defineComponent({
   name: "Home",
   setup() {
@@ -100,6 +101,11 @@ export default defineComponent({
     const goToPublish = () => {
       router.push({ path: '/publishGoods' })
     }
+    async function testL() {
+      let data = { 'data': 'xxxx' }
+      const response = await test(data)
+      console.log('response:', response);
+    }
     const goTo = (r: any, query?: any) => router.push({ path: r, query: query || {} })
     return {
       images,
@@ -108,8 +114,12 @@ export default defineComponent({
       goUserCenter,
       goTo,
       selectProduct,
-      goToPublish
+      goToPublish,
+      testL
     };
+  },
+  mounted: function () {
+    this.testL()
   },
   components: { GoodsList }
 })

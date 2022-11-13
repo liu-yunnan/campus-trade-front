@@ -95,6 +95,7 @@ const onSubmit = () => {
     console.log(state.selected);
     showPopup()
   } else {
+    Toast('未选中任何商品')
     console.log('未选中商品');
   }
 }

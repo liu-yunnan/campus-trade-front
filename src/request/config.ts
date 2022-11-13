@@ -1,0 +1,12 @@
+let BASE_URL = ''
+const TIME_OUT = 10000
+
+if (process.env.NODE_ENV === 'development') {
+  BASE_URL = 'https://www.fastmock.site/mock/c3d6ae6e21f320374de37b070c248913/campus-trade'
+} else if (process.env.NODE_ENV === 'production') {
+  BASE_URL = 'https://www.fastmock.site/mock/c3d6ae6e21f320374de37b070c248913/campus-trade'
+} else {
+  BASE_URL = 'https://www.fastmock.site/mock/c3d6ae6e21f320374de37b070c248913/campus-trade'
+}
+
+export { BASE_URL, TIME_OUT }

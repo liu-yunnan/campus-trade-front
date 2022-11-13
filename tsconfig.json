@@ -27,5 +27,6 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
+  "extends": "./tsconfig.extends.json"
 }
