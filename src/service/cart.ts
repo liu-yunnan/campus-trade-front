@@ -5,10 +5,10 @@ export function getCartList(){
   return http.get('/trade/cart/list')
 }
 // goodsId
-export function addGoodsToCart(){
-  return http.put('/trade/cart/add')
+export function addGoodsToCart(id: number){
+  return http.put(`/trade/cart/add?goodsId=${id}`)
 }
 // goodsId
-export function removeGoodsOutCart(){
-  return http.delete('/trade/cart/remove')
+export function removeGoodsOutCart(id:number){
+  return http.delete(`/trade/cart/remove?goodsId=${id}`)
 }

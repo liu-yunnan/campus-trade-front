@@ -3,7 +3,7 @@
     <!-- 搜索页 -->
     <!-- <van-nav-bar fixed title="" left-text="返回" left-arrow @click-left="onClickLeft" /> -->
     <div class="header_saerchbox">
-      <van-button color="#ffdb46" icon="arrow-left" @click="onClickLeft"></van-button>
+      <van-button color="#ffdb46" icon="arrow-left" @click-left="onClickLeft"></van-button>
       <van-search shape="round" background="#ffdb46" placeholder="请输入搜索关键词" v-model="state.keyword"
         @click="getSearch" />
     </div>
@@ -13,18 +13,28 @@
 
 <script setup lang="ts">
 import GoodsList from "@/components/goods/goodsList.vue"
+import { selectGoodsList } from '@/service/goods'
 import { LocationQueryValue } from 'vue-router';
 import router from "../../router";
 let route = useRoute();
+const categoryId = parseInt(route.query.id as string)
 const onClickLeft = () => history.back();
 const state = reactive({
   keyword: '',
-  id: route.query.id || '',
+  categoryId: categoryId || -1,
   list: [],
+  pageNum: 1,
+  pageSize: 20,
+  // priceOrder: 
 })
-const getSearch = () => {
-
+const getSearch = async () => {
+  const { data } = await selectGoodsList(state.categoryId, state.keyword, state.pageNum, state.pageSize, "", -1)
 }
+onMounted(async () => {
+  const { data } = await selectGoodsList(state.categoryId, state.keyword, state.pageNum, state.pageSize, "", -1)
+  state.list = data
+  console.log(state.list);
+})
 </script>
 
 <style scoped lang="scss">

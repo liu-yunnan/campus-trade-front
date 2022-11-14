@@ -10,7 +10,7 @@
     <van-card v-for="item in state.goodsList" :key="item.id" :price="item.price" :desc="item.detail" :title="item.name"
       :thumb="getImageUrl(item.images[0])" @click-thumb="showGoods(item.id)">
       <template #tags>
-        <van-tag plain type="danger">{{ item.tag === 0 ? '新发布' : item.tag === 1 ? '已上架' : item.tag === 2 ? '已下架' : '已售出'
+        <van-tag plain type="danger">{{ item.tag === 1 ? '新发布' : item.tag === 2 ? '已上架' : item.tag === 4 ? '已下架' : '已售出'
         }}
         </van-tag>
       </template>
@@ -38,7 +38,7 @@ type Good = {
   name: string,
   detail: string,
   price: number,
-  tag: 0 | 1 | 2 | 3, // 0：新发布 1：上架 2：下架 3：已售出 
+  tag: 1 | 2 | 4 | 8, // 1：新发布 2：上架 4：下架 8：已售出 
   date: string
 }
 const getImageUrl = (name: string) => {
@@ -73,7 +73,7 @@ state.goodsList = reactive<Array<Good>>([
     name: '宝宝面霜',
     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
     price: 20,
-    tag: 0,
+    tag: 2,
     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
   },
   {
@@ -82,7 +82,7 @@ state.goodsList = reactive<Array<Good>>([
     name: 'ipad 2020 ',
     detail: '99新',
     price: 2000,
-    tag: 2,
+    tag: 4,
     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
   },
   {
@@ -91,7 +91,7 @@ state.goodsList = reactive<Array<Good>>([
     name: '宝宝面霜',
     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
     price: 20,
-    tag: 3,
+    tag: 8,
     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
   }
 ])
@@ -120,25 +120,25 @@ const upGoods = (goodsId: string) => {
   console.log('上架', goodsId);
 }
 const getTag = (tag: number, btn: 1 | 2 | 3) => {
-  if (tag === 0) { //新发布
+  if (tag === 1) { //新发布
     if (btn === 1 || btn === 3) {
       return false
     }
     return true
   }
-  if (tag === 1) { //已上架
+  if (tag === 2) { //已上架
     if (btn === 2) {
       return false
     }
     return true
   }
-  if (tag === 2) { //已下架
+  if (tag === 4) { //已下架
     if (btn === 1 || btn === 3) {
       return false
     }
     return true
   }
-  if (tag === 3) { //已售出
+  if (tag === 8) { //已售出
     return true
   }
 }

@@ -1,18 +1,12 @@
 import { AxiosRequestConfig } from 'axios'
 import{ http } from '../request/index'
 
-export function test(params:AxiosRequestConfig<any> | undefined){
-  return http.post('/test',params)
+export function psdUpdate(params: AxiosRequestConfig<any> | undefined) {
+  return http.post('/member/psdupdate', params);
 }
-export function login(params:AxiosRequestConfig<any> | undefined){
-  return http.post('/user/login',params)
+export function getUserInfo() {
+  return http.get(`/member`);
 }
-export function register(params: AxiosRequestConfig<any> | undefined){
-  return http.post('/user/register',params)
-}
-export function logout() {
-  return http.post('/user/logout')
-}
-export function EditUserInfo(params: AxiosRequestConfig<any> | undefined) {
-  return http.put('/user/info', params);
+export function EditUserInfo(params:AxiosRequestConfig<any>) {
+  return http.put(`/member`,params);
 }

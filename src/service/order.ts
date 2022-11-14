@@ -1,24 +1,23 @@
 import { AxiosRequestConfig } from 'axios'
 import{ http } from '../request/index'
+// Date.parse(new Date('2021-11-22')); 
+// pageNo :100
+export function getOrderList(params:AxiosRequestConfig){
+  return http.post('/trade/order/page',params)
+}
+// goodsId
+export function getOrderById(id:number){
+  return http.get(`/trade/order/queryById?id=${id}`)
+}
+// goodsIdList int[]
+export function creatOrder(params:AxiosRequestConfig){
+  return http.post('/trade/order/create',params)
+}
+// goodsId
+export function cancelOrder(id:number){
+  return http.put(`/trade/order/cancel?id=${id}`)
+}
 
-// pageNumber :100
-export function getOrderList(){
-  return http.post('/trade/order/page')
-}
-// goodsId
-export function getOrderById(){
-  return http.get('/trade/order/queryById')
-}
-// goodsIdList
-export function creatOrder(){
-  return http.post('/trade/order/create')
-}
-// goodsId
-export function cacelOrder(){
-  return http.put('/trade/order/cancel')
-}
-
-// goodsId
-export function payOrder(){
-  return http.put('/trade/order/pay')
+export function payOrder(orderId:number,payType:number){
+  return http.put(`/trade/order/pay?id=${orderId}&payType=${payType}`)
 }
