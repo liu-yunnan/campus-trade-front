@@ -2,7 +2,6 @@
   <!-- 这是商品列表 -->
   <!-- <div class="goodslist"> -->
   <van-pull-refresh v-model="state.isLoading" @refresh="onRefresh">
-
     <van-list class="goodslist" v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了"
       @load="onLoad">
       <van-cell class="goodslist_item" v-for="good in state.list" :key="good.id" @click="showGoods(good.id)">
@@ -153,13 +152,12 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .goodslist {
-  // margin-top: .08rem;
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
   background: #f6f6f6;
   margin-bottom: .4rem;
-  padding-top: .05rem;
+  padding-top: .08rem;
 
   &_item {
     width: 46%;
