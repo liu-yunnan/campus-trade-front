@@ -69,6 +69,7 @@
 import { defineComponent } from "vue"
 import GoodsList from "./goods/goodsList.vue"
 import router from "../router"
+import { getLocal } from "@/common/common";
 export default defineComponent({
   name: "Home",
   setup() {
@@ -85,26 +86,26 @@ export default defineComponent({
       })
     }
     const goUserCenter = () => {
-      // 需要先判断用户的登录状态,如果没登录需要跳转到登录页
-      // router.push({
-      //   name: "UserCenter",
-      // })
-      router.push({
-        name: "Login",
-      })
+      // 鉴权
+      if (getLocal('token') !== '') {
+        router.push({
+          name: "UserCenter",
+        })
+      } else {
+        router.push({ name: "Login", })
+      }
     }
     const selectProduct = (id?: number) => {
       // 鉴权
-      router.push({ path: '/search', query: { categoryId: id } })
+      if (getLocal('token') !== '') {
+        router.push({ path: '/search', query: { categoryId: id } })
+      } else {
+        router.push({ name: "Login" })
+      }
     }
     const goToPublish = () => {
       router.push({ path: '/publishGoods' })
     }
-    // async function testL() {
-    //   let data = { 'data': 'xxxx' }
-    //   const response = await test(data)
-    //   console.log('response:', response);
-    // }
     const goTo = (r: any, query?: any) => router.push({ path: r, query: query || {} })
     return {
       images,

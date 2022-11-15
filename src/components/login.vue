@@ -41,13 +41,17 @@
 import { Toast } from 'vant';
 import { setLocal } from '../common/common';
 import router from '../router';
-
+import { login, register } from '@/service/loginRegister'
 const verifyRef = ref(null)
+// 手机号校验
 const validator1 = (val: string) => /1\d{10}/.test(val);
+// 密码校验
 const validator2 = (val: string) => /^.*(?=.*[0-9])(?=.*[A-Z])|(?=.*[a-z])\w{6,16}/.test(val);
 const state = reactive({
+  // 登录
   username: '',
   password: '',
+  // 注册
   username1: '',
   password1: '',
   confirmPassword1: '',
@@ -60,13 +64,15 @@ const toggle = (v: string) => {
 }
 
 // 提交登录或注册表单
-const onSubmit = async (values: { username1: any; password1: any; }) => {
+const onSubmit = async (values: { username: any; password: any; username1: any; password1: any; }) => {
   if (state.type == 'login') {
-    // const { data } = await login({
-    //   "loginName": values.username,
-    //   "passwordMd5": values.password
-    // })
-    // setLocal('token', data)
+    const { data } = await login({
+      data: {
+        "tel": values.username,
+        "password": values.password
+      }
+    })
+    setLocal('token', data.token)
     console.log('登录');
     // 需要刷新页面，否则 axios.js 文件里的 token 不会被重置
     window.location.href = '/'
@@ -75,7 +81,11 @@ const onSubmit = async (values: { username1: any; password1: any; }) => {
       Toast('请输入手机号')
       return false
     }
-    if (state.confirmPassword1 === '') {
+    if (state.confirmPassword1 !== '' && state.password1 === '') {
+      Toast('请输入密码')
+      return false
+    }
+    if (state.confirmPassword1 === '' && state.password1 !== '') {
       Toast('请确认密码');
       return false
     }
@@ -93,11 +103,14 @@ const onSubmit = async (values: { username1: any; password1: any; }) => {
       state.confirmPassword1 = '';
       return false
     }
-    // await register({
-    //   "loginName": values.username1,
-    //   "password": values.password1
-    // })
-    // Toast.success('注册成功')
+    await register({
+      data: {
+        "tel": values.username1,
+        "password": values.password1
+      }
+    })
+    console.log('用户名密码：', values.username1, values.password1);
+    Toast.success('注册成功')
     state.type = 'login'
   }
 }

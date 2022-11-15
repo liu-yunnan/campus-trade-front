@@ -18,10 +18,14 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router';
+import { getUserInfo, psdUpdate } from '@/service/user';
 import { Toast } from 'vant';
-import router from '../../router';
+const user = reactive({
+  userId: 1,
+  password: '',
+})
 const state = reactive({
-  userId: '001',
   password: '',
   newPassword: '',
   confirmNewPassword: '',
@@ -31,11 +35,9 @@ const validator = (val: string) => pattern.test(val);
 const onClickLeft = () => history.back();
 
 onMounted(async () => {
-  // const { data } = await getUserInfo()
-  // state.userId = data.userId
-  // state.passward = data.password
-  // state.newPassword = data.newPassword
-  // state.confirmNewPassword = data.confirmNewPassword
+  const { data } = await getUserInfo()
+  user.userId = data.id
+  user.password = data.password
 })
 
 const onSubmit = async () => {
@@ -72,19 +74,19 @@ const onSubmit = async () => {
     state.confirmNewPassword = '';
     return false;
   }
-  Toast.success('修改成功，请重新登录')
-  // http.post('/login/resetpwd', this.form).then(res => {
-  //   if (res.state) {
-  //     vant.Toast.success(res.msg);//成功信息
-  //     window.location = "${rootpath}/mobile/home/index";
-  //   } else {
-  //     vant.Toast.fail(res.msg);//失败信息
-  //   }
-  // }).catch(res => {
-  //   vant.Toast.clear();
-  //   console.log(res);
-
-  // });
+  const data = await psdUpdate({
+    data: {
+      newPassword: state.newPassword,
+      originPassword: user.password
+    }
+  })
+  console.log(data);
+  if (data.code === 200) {
+    Toast.success(data.msg);//成功信息
+    router.push({ name: 'Login' })
+  } else {
+    Toast.fail(data.msg);//失败信息
+  }
 }
 
 </script>

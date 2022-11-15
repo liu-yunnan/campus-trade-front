@@ -7,7 +7,7 @@ import { getLocal } from "../common/common";
 class Request {
     private baseUrl: string = BASE_URL
 
-    private request(opts: {}) {
+    private request(opts: {}): any {
         const instance: AxiosInstance = axios.create({
             baseURL: this.baseUrl,
             timeout: TIME_OUT
@@ -22,29 +22,35 @@ class Request {
 
             const token = getLocal('token')
             if (token && config.headers) {
+                // config.headers['Access-Control-Expose-Headers'] = 'Authorization'
                 config.headers['Authorization'] = token;
             }
             return config
         })
         //响应拦截器
-        instance.interceptors.response.use((res: AxiosResponse) => {
-            if (res.status == 200) {
+        instance.interceptors.response.use((res: any) => {
+            if (res.status == 200 ) {
                 return Promise.resolve(res.data)
             } else {
                 return Promise.reject(res.data)
             }
         }, err => {
-            switch (err.response.status) {
-                case 401:
-                    Toast('用户信息过期，请重新登录')
-                    setTimeout(() => {
-                        router.push('/login');
-                    }, 1000);
-                    break;
-                default:
-                    Toast(err.response.status)
-                    break;
+            // console.log(err.message);
+            // console.error('error',err);
+            if(err.response){
+                switch (err.response.status) {
+                    case 401:
+                        Toast('用户信息过期，请重新登录')
+                        setTimeout(() => {
+                            router.push('/login');
+                        }, 1000);
+                        break;
+                    default:
+                        Toast(err.response.data.msg)
+                        break;
+                }
             }
+            
             return Promise.reject(err);
         })
     }
@@ -92,3 +98,4 @@ class Request {
     }
 }
 export const http = new Request()
+let o :AxiosResponse

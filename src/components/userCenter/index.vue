@@ -42,6 +42,9 @@
 
 <script setup lang="ts">
 import router from '../../router';
+import { getUserInfo } from '@/service/user'
+import { getLocal } from '@/common/common';
+import { Toast } from 'vant';
 const user = reactive({
   userName: 'DoKiDoKi',
   QQ: '1792147770',
@@ -51,13 +54,23 @@ const user = reactive({
 let loading = ref<boolean>(true)
 
 onMounted(async () => {
-  // const { data } = await getUserInfo()
-  // state.user = data
+  const { data } = await getUserInfo()
+  user.userName = data.username;
+  user.introduceSign = data.personSignature;
+  user.tel = data.tel;
+  user.QQ = data.qq;
   loading.value = false
 })
 
 const onClickLeft = () => router.push({ path: '/' });
-const goTo = (r: any, query?: any) => router.push({ path: r, query: query || {} })
+const goTo = (r: any, query?: any) => {
+  if (getLocal('token') !== '') {
+    router.push({ path: r, query: query || {} })
+  } else {
+    Toast('请先登录!')
+    router.push({ name: 'Login' })
+  }
+}
 </script>
 
 <style scoped lang="scss">

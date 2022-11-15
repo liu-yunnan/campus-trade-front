@@ -13,39 +13,41 @@
 </template>
 
 <script setup lang="ts">
-import router from '../../router';
+import { logout } from '@/service/loginRegister'
+import { setLocal } from '@/common/common';
+import { editUserInfo, getUserInfo } from '@/service/user'
+import { Toast } from 'vant';
 const state = reactive({
-  userName: 'DoKiDoKi',
-  QQ: '1792147770',
-  tel: '12345678977',
-  introduceSign: '这个人很懒，什么都没留下',
+  userName: '',
+  QQ: '',
+  tel: '',
+  introduceSign: '',
 })
 const onClickLeft = () => history.back();
 
 onMounted(async () => {
-  // const { data } = await getUserInfo()
-  // state.userName = data.userName
-  // state.QQ = data.QQ
-  // state.tel = data.tel
-  // state.introduceSign = data.introduceSign
+  const { data } = await getUserInfo()
+  state.userName = data.username
+  state.QQ = data.qq
+  state.introduceSign = data.personSignature === null ? '这个人很懒，什么都没留下' : data.personSignature
 })
 
 const save = async () => {
   const params = {
-    userName: state.userName,
-    tel: state.tel,
-    QQ: state.QQ,
-    introduceSign: state.introduceSign
+    username: state.userName,
+    qq: state.QQ,
+    personSignature: state.introduceSign
   }
-  // await EditUserInfo(params)
-  // Toast.success('保存成功')
+  await editUserInfo({ data: params })
+  Toast.success('保存成功')
   console.log('保存');
 }
 
 const handleLogout = async () => {
-  // const { resultCode } = await logout()
+  const result = await logout()
+  console.log(result);
   // if (resultCode == 200) {
-  //   setLocal('token', '')
+  setLocal('token', '')
   window.location.href = '/'
   // }
   console.log('退出登录');
