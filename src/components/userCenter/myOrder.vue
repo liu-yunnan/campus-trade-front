@@ -5,7 +5,12 @@
     <van-calendar v-model:show="state.show" lazy-render :show-confirm="false" type="range" @confirm="onConfirm"
       color="#ffdb46" :min-date="new Date(2021, 1, 1)" />
   </div>
-  <div class="main">
+  <div class="empty" v-if="!state.orderList.length">
+    <img class="empty-cart" src="@/assets/img/您还没有收到任何订单哦_.png" alt="空购物车">
+    <div class="title">您在此期间没有订单~</div>
+    <van-button class="button" round color="#ffdb46" type="primary" @click="goTo" block>前往选购</van-button>
+  </div>
+  <div class="main" v-if="state.orderList.length > 0">
     <div class="order_cart" v-for="order in state.orderList" :key="order.orderId" @click="showOrder(order.orderId)">
       <div class="header">
         <div class="header_tag">
@@ -40,7 +45,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -212,8 +216,8 @@ const init = async (startTime?: number, endTime?: number) => {
   } else {
     data = await getOrderList({
       data: {
-        startTime: startTime,
-        endTime: endTime,
+        beginDate: startTime,
+        endDate: endTime,
         pageNo: 1,
         pageSize: 100,
       }
@@ -240,12 +244,34 @@ const init = async (startTime?: number, endTime?: number) => {
 onMounted(() => {
   init()
 })
+const goTo = () => router.push({ path: '/' })
 const onClickLeft = () => history.back();
 </script>
  
 <style scoped lang="scss">
 .select_box {
   margin-top: 46px;
+}
+
+.empty {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 200px;
+
+  .empty-cart {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+
+  .van-icon-smile-o {
+    font-size: 50px;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 }
 
 .main {
