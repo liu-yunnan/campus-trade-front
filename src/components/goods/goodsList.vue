@@ -6,13 +6,19 @@
       finished-text="没有更多了" @load="onLoad">
       <van-cell class="goodslist_item" v-for="goods in state.list" :key="goods.id" @click="showGoods(goods.id)">
         <van-image width="1.8rem" height="1.5rem" fit="cover" :src="goods.images" />
-        <p>{{ goods.name }}</p>
-        <div class="money">
-          <span class="money_">￥{{ goods.price - goods.price % 1 }}</span><span>{{ goods.price % 1 }}</span>
-          <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)"
-            @click.stop="addGood(goods.id)">
-            加购
-          </van-button>
+        <div class="goodslist_item_introduciton">
+          <p>{{ goods.name }}</p>
+          <div class="detail">{{ goods.detail }}</div>
+          <div class="money">
+            <div class="money_price">
+              <span class="money_price_integer">￥{{ computePrice(goods.price, 1) }}</span>
+              <span class="money_price_decimal">.{{ computePrice(goods.price, 2) }}</span>
+            </div>
+            <van-button icon="plus" size="mini" color="linear-gradient(to right, #ff6034, #ee0a24)"
+              @click.stop="addGood(goods.id)">
+              加购
+            </van-button>
+          </div>
         </div>
       </van-cell>
     </van-list>
@@ -23,10 +29,7 @@
 import { Toast } from 'vant';
 import router from '../../router';
 import { selectGoodsList } from '@/service/goods'
-// const props = defineProps<{
-//   keyword: string,
-//   categoryId: string
-// }>()
+import { computePrice } from '@/common/common'
 type Goods = {
   id: string,
   images: string,
@@ -34,37 +37,6 @@ type Goods = {
   detail: string,
   price: number,
 }
-// let goodsList = reactive<Array<Goods>>([
-//   {
-//     id: '001',
-//     images: ['ipad.jpeg'],
-//     name: 'ipad 2020 ',
-//     detail: '99新',
-//     price: 2000
-//   },
-//   {
-//     id: '002',
-//     images: ['面霜.png', '面霜.png', '面霜.png'],
-//     name: '宝宝面霜',
-//     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-//     price: 20
-//   },
-//   {
-//     id: '003',
-//     images: ['ipad.jpeg'],
-//     name: 'ipad 2020 ',
-//     detail: '99新',
-//     price: 2000
-//   },
-//   {
-//     id: '004',
-//     images: ['面霜.png', '面霜.png', '面霜.png'],
-//     name: '宝宝面霜',
-//     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-//     price: 20
-//   }
-// ])
-
 /* 对外暴露方法 */
 function onSearch(keyword: string, categoryId: number = -1) {
   state.keyword = keyword
@@ -96,6 +68,7 @@ const state = reactive({
 })
 
 const addGood = (goodsId: string) => {
+
   console.log(goodsId);
 }
 const showGoods = (goodsId: string) => {
@@ -160,10 +133,11 @@ const onLoad = async () => {
   background: #f6f6f6;
   padding-bottom: .7rem;
   padding-top: .08rem;
+  min-height: 4.5rem;
 
   &_item {
     width: 46%;
-    height: 2.1rem;
+    height: 2.6rem;
     background: white;
     border-radius: .1rem;
     overflow: hidden;
@@ -172,35 +146,48 @@ const onLoad = async () => {
     box-sizing: border-box;
     margin-left: .1rem;
 
-    p {
-      padding: 0 .05rem;
-      font-size: .14rem;
-      line-height: .175rem;
-      font-weight: 600;
-      color: #333;
-      width: 100%;
-      // 多出隐藏
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
+    &_introduciton {
+      padding: .05rem .05rem;
 
-    .money {
-      // line-height: .3rem
-      padding: .075rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-right: .075rem;
+      p {
+        font-size: .14rem;
+        font-weight: 600;
+        // color: #333;
+      }
 
-      span {
-        font-size: 0.14rem;
-        color: #FF4422;
-        font-weight: bold;
+      .detail {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: .12rem;
+        // color: #333;
+      }
+
+      .money {
+        // line-height: .3rem
+        padding: .07rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: .075rem;
+
+        &_price {
+          &_integer {
+            font-size: 0.16rem;
+            color: #FF4422;
+            font-weight: bold;
+          }
+
+          &_decimal {
+            font-size: 0.1rem;
+            color: #FF4422;
+            font-weight: bold;
+          }
+        }
+
       }
     }
+
   }
 }
 
@@ -212,9 +199,5 @@ const onLoad = async () => {
 ::v-deep .van-list__finished-text {
   width: 100%;
   margin: 0 auto;
-  // margin-top: -0.15rem
-  position: absolute;
-  // justify-self: center;
-  bottom: .4rem;
 }
 </style>

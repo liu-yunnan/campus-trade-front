@@ -7,7 +7,7 @@
   </div>
   <div class="main">
     <!-- 我发布的商品 -->
-    <van-card v-for="(item) in state.goodsList" :key="item.id" :price="item.price" :desc="item.detail"
+    <van-card v-for="(item) in state.goodsList" :key="item.id" :price="item.price.toFixed(2)" :desc="item.detail"
       :title="item.name" :thumb="item.image" @click-thumb="showGoods(item.id)">
       <template #tags>
         <van-tag plain type="danger">{{ item.tag === 1 ? '新发布' : item.tag === 2 ? '已上架' : item.tag === 4 ? '已下架' :
@@ -34,7 +34,7 @@
 import router from '../../router';
 import { getPubGoods, upGoods, downGoods } from '@/service/goods'
 import { Toast } from 'vant';
-import { getLocal } from '@/common/common';
+import { getLocal, computePrice } from '@/common/common';
 type Goods = {
   id: string,
   image: string,

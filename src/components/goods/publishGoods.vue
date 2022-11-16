@@ -67,15 +67,17 @@ const onSubmit = async (content: any) => {
       categoriesId: state.categoryId,
       detail: state.detail,
       images: getImgIds(state.uploadImg),
-      price: state.price,
+      price: Number(state.price).toFixed(2),
       title: state.goodsName
     }
   }).then((res: any) => {
+    console.log("price", Number(state.price).toFixed(2));
     if (res.code === 200) {
       Toast(res.msg)
       router.push({ path: '/' })
     }
   })
+
 }
 
 

@@ -19,7 +19,8 @@
       </van-divider>
       <!-- 商品详情 -->
       <div class="goodsitem_money">
-        <span>￥{{ goods.price }}</span>
+        <span class="goodsitem_money_integer">￥{{ computePrice(goods.price, 1) }}</span>
+        <span class="goodsitem_money_decimal">.{{ computePrice(goods.price, 2) }}</span>
       </div>
 
       <div class="goodsitem_n">
@@ -31,8 +32,7 @@
         <img v-for="image in goods.images" :src="image" :key="image" alt="" srcset="">
       </div>
 
-
-
+      <div class="goodsitem_finally_text">没有更多了~</div>
     </div>
     <van-action-bar>
       <!-- <van-action-bar-icon icon="chat-o" text="聊一聊" /> -->
@@ -52,7 +52,7 @@
 import { getGoodsItem } from '@/service/goods';
 import { areaList } from '@vant/area-data';
 import { Toast } from 'vant';
-import { LocationQueryValue } from 'vue-router';
+import { computePrice } from '@/common/common'
 import router from '../../router';
 let route = useRoute();
 let id = route.query.id as string
@@ -133,6 +133,7 @@ const onClickLeft = () => history.back();
 <style scoped lang="scss">
 .goodsitem {
   margin-top: .5rem;
+  margin-bottom: 1rem;
 
   &_user {
     padding: .09rem;
@@ -144,8 +145,9 @@ const onClickLeft = () => history.back();
     }
 
     &_detail {
+      width: 100%;
       font-size: .15rem;
-      color: #333;
+      // color: #333;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -158,37 +160,47 @@ const onClickLeft = () => history.back();
   }
 
   &_money {
-    // line-height: .3rem
     padding: 0rem .1rem;
-    // padding-bottom: .05rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding-right: .075rem;
 
-    span {
-      font-size: .2rem;
+    &_integer {
+      font-size: 0.2rem;
+      color: #FF4422;
+      font-weight: bold;
+    }
+
+    &_decimal {
+      font-size: 0.12rem;
       color: #FF4422;
       font-weight: bold;
     }
   }
 
   &_n {
+
     display: flex;
     flex-direction: column;
     margin: .1rem;
     line-height: .18rem;
     font-size: .15rem;
 
-    &_name {
-      font-size: .16rem;
-      font-weight: 600;
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 140%;
       font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Segoe UI, Arial, Roboto, PingFang SC, miui, Hiragino Sans GB, Microsoft Yahei, sans-serif;
     }
 
+    &_name {
+      font-size: .16rem;
+      font-weight: 600;
+
+    }
+
     &_detail {
+      word-wrap: break-word;
+      word-break: break-all;
       margin-top: .08rem;
-      font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Segoe UI, Arial, Roboto, PingFang SC, miui, Hiragino Sans GB, Microsoft Yahei, sans-serif;
     }
   }
 
@@ -204,6 +216,11 @@ const onClickLeft = () => history.back();
       // border: 1px solid #333;
       border-radius: .05rem;
     }
+  }
+
+  &_finally_text {
+    color: #666;
+    text-align: center;
   }
 
 }

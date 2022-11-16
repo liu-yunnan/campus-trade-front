@@ -11,16 +11,15 @@
       <van-swipe-cell :right-width="50" v-for="goods in state.list" :key="goods.id">
         <div class="goods_item">
           <van-checkbox :name="goods.id" />
-          <van-card @click="showGoods(goods.id)" :price="goods.price" :desc="goods.detail" :title="goods.name"
-            :thumb="goods.images[0]" />
+          <van-card @click="showGoods(goods.id)" :price="goods.price.toFixed(2)" :desc="goods.detail"
+            :title="goods.name" :thumb="goods.images[0]" />
         </div>
         <template #right>
           <van-button icon="delete" type="danger" class="delete-button" @click="deleteGoods(goods.id)" />
         </template>
       </van-swipe-cell>
-
     </van-checkbox-group>
-
+    <div class="finally_text">已经到底啦~</div>
   </div>
   <van-submit-bar v-if="state.list.length > 0" class="submit" :price="total * 100" button-text="提交订单" @click="onSubmit">
     <van-checkbox @click.stop="allCheck" v-model:checked="state.checkAll">全选</van-checkbox>
@@ -166,28 +165,23 @@ const allCheck = () => {
     state.selected = []
   }
 }
-
-// const checked = ref('1');
-
-
-
-
 </script>
 
 <style scoped lang="scss">
 .goods {
-  padding-top: .4rem;
+  padding-top: .5rem;
   background: #f6f6f6;
   height: 100%;
   padding-bottom: 1rem;
 
   &_item {
-    margin: .08rem;
+    margin: .04rem .1rem;
     border-radius: .1rem;
     overflow: hidden;
     background: white;
-    padding: 0 20px;
+    padding: 0 .1rem;
     display: flex;
+    // justify-content: space-between;
 
     ::v-deep .van-card {
 
@@ -195,7 +189,7 @@ const allCheck = () => {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      max-width: 3rem;
+      width: 3rem;
 
       &__title {
         padding: .05rem 0;
@@ -221,6 +215,11 @@ const allCheck = () => {
         }
       }
     }
+  }
+
+  .finally_text {
+    color: #666;
+    text-align: center;
   }
 }
 

@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios'
 import{ http } from '../request/index'
 
-export function selectGoodsList(categoryId:number,keyword:string,pageNum:number = -1,pageSize:number,priceOrder:''|'asc'|'desc',putOnTime:number = -1){
+export function selectGoodsList(categoryId:number = -1,keyword:string,pageNum:number = -1,pageSize:number,priceOrder:''|'asc'|'desc',putOnTime:number = -1){
   return http.get(`/goods/?categoryId=${categoryId}&keyword=${keyword}&pageNum=${pageNum}&pageSize=${pageSize}&priceOrder=${priceOrder}&putOnTime=${putOnTime}
   `)
 }

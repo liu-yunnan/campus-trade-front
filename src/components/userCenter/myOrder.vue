@@ -19,7 +19,7 @@
           {{ order.date }}
         </div>
       </div>
-      <van-card v-for="item in order.goodsList" :key="item.id" :price="item.price" :desc="item.detail"
+      <van-card v-for="item in order.goodsList" :key="item.id" :price="item.price.toFixed(2)" :desc="item.detail"
         :title="item.name" :thumb="getImageUrl(item.images[0])">
         <template #price-top>
           <div>{{ item.date }}</div>
@@ -27,7 +27,8 @@
       </van-card>
       <div class="footer">
         <div class="footer_price">
-          ￥{{ order.totalPrice }}
+          <span class="footer_price_integer">￥{{ computePrice(order.totalPrice, 1) }}</span>
+          <span class="footer_price_decimal">.{{ computePrice(order.totalPrice, 2) }}</span>
         </div>
         <div class="footer_btn">
           <van-button :disabled="getTag(order.tag)" color="#ffdb46" type="primary" size="mini"
@@ -46,6 +47,7 @@
 <script setup lang="ts">
 import router from '../../router';
 import { Dialog } from 'vant';
+import { computePrice } from '@/common/common'
 const getImageUrl = (name: string) => {
   return new URL(`/src/assets/img/${name}`, import.meta.url).href;
 };
@@ -217,7 +219,17 @@ const onClickLeft = () => history.back();
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // color: #FF4422;
+
+      &_price {
+        &_integer {
+          font-size: 0.16rem;
+          font-weight: bold;
+        }
+
+        &_decimal {
+          font-size: 0.1rem;
+        }
+      }
 
       &_btn {
         margin-top: -10px;

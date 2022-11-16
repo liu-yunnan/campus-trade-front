@@ -239,7 +239,7 @@ export default defineComponent({
   .guessUlike {
     // height: .475rem;
     padding: .1rem 0;
-    background: rgba(255, 255, 255, 0.443);
+    // background: rgba(255, 255, 255);
 
     img {
       width: 100%;
