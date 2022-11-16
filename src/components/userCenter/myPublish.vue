@@ -7,10 +7,11 @@
   </div>
   <div class="main">
     <!-- 我发布的商品 -->
-    <van-card v-for="item in state.goodsList" :key="item.id" :price="item.price" :desc="item.detail" :title="item.name"
-      :thumb="getImageUrl(item.images[0])" @click-thumb="showGoods(item.id)">
+    <van-card v-for="(item) in state.goodsList" :key="item.id" :price="item.price" :desc="item.detail"
+      :title="item.name" :thumb="item.image" @click-thumb="showGoods(item.id)">
       <template #tags>
-        <van-tag plain type="danger">{{ item.tag === 1 ? '新发布' : item.tag === 2 ? '已上架' : item.tag === 4 ? '已下架' : '已售出'
+        <van-tag plain type="danger">{{ item.tag === 1 ? '新发布' : item.tag === 2 ? '已上架' : item.tag === 4 ? '已下架' :
+            '已售出'
         }}
         </van-tag>
       </template>
@@ -18,11 +19,11 @@
         <div>{{ item.date }}</div>
       </template>
       <template #footer>
-        <van-button :disabled="getTag(item.tag, 1)" size="mini" @click="upGoods(item.id)">上架
+        <van-button :disabled="getTag(item.tag, 1)" size="mini" @click="onUpGoods(item)">上架
         </van-button>
-        <van-button :disabled="getTag(item.tag, 2)" size="mini" @click="downGoods(item.id)">下架
+        <van-button :disabled="getTag(item.tag, 2)" size="mini" @click="onDownGoods(item)">下架
         </van-button>
-        <van-button :disabled="getTag(item.tag, 3)" size="mini" @click="updateGoods(item.id)">编辑
+        <van-button :disabled="getTag(item.tag, 3)" size="mini" @click="onUpdateGoods(item.id)">编辑
         </van-button>
       </template>
     </van-card>
@@ -31,94 +32,123 @@
 
 <script setup lang="ts">
 import router from '../../router';
-
-type Good = {
-  id: string
-  images: Array<string>,
+import { getPubGoods, upGoods, downGoods } from '@/service/goods'
+import { Toast } from 'vant';
+import { getLocal } from '@/common/common';
+type Goods = {
+  id: string,
+  image: string,
   name: string,
   detail: string,
   price: number,
   tag: 1 | 2 | 4 | 8, // 1：新发布 2：上架 4：下架 8：已售出 
   date: string
 }
-const getImageUrl = (name: string) => {
-  return new URL(`/src/assets/img/${name}`, import.meta.url).href;
-};
 const state = reactive({
-  goodsList: new Array<Good>(),
+  goodsList: new Array<Goods>(),
   timeArr: '',
   show: false,
 })
-const formatDate = (date: any) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-const onConfirm = (values: [any, any]) => {
+//   {
+//     id: '001',
+//     images: ['ipad.jpeg'],
+//     name: 'ipad 2020 ',
+//     detail: '99新',
+//     price: 2000,
+//     tag: 1,
+//     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+//   },
+//   {
+//     id: '002',
+//     images: ['面霜.png', '面霜.png', '面霜.png'],
+//     name: '宝宝面霜',
+//     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
+//     price: 20,
+//     tag: 2,
+//     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+//   },
+//   {
+//     id: '003',
+//     images: ['ipad.jpeg'],
+//     name: 'ipad 2020 ',
+//     detail: '99新',
+//     price: 2000,
+//     tag: 4,
+//     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+//   },
+//   {
+//     id: '004',
+//     images: ['面霜.png', '面霜.png', '面霜.png'],
+//     name: '宝宝面霜',
+//     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
+//     price: 20,
+//     tag: 8,
+//     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+//   }
+// ])
+
+// 获取日期
+onMounted(async () => {
+  const { data } = await getPubGoods()
+  state.goodsList = data.map((item: any) => item = {
+    id: item.goodsId + '',
+    image: item.cover,
+    name: item.title,
+    detail: item.detail,
+    tag: item.state,
+    date: item.publishDate,
+    price: item.price
+  })
+})
+
+const formatDate = (date: any) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+// 获取日期区间的订单
+const onConfirm = async (values: [any, any]) => {
   const [start, end] = values;
   state.show = false;
   state.timeArr = `${formatDate(start)} - ${formatDate(end)}`;
-  // 获取日期区间的订单
+  const { data } = await getPubGoods(Date.parse(formatDate(start)), Date.parse(formatDate(end)))
+  state.goodsList = data
 };
 
-state.goodsList = reactive<Array<Good>>([
-  {
-    id: '001',
-    images: ['ipad.jpeg'],
-    name: 'ipad 2020 ',
-    detail: '99新',
-    price: 2000,
-    tag: 1,
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-  },
-  {
-    id: '002',
-    images: ['面霜.png', '面霜.png', '面霜.png'],
-    name: '宝宝面霜',
-    detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-    price: 20,
-    tag: 2,
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-  },
-  {
-    id: '003',
-    images: ['ipad.jpeg'],
-    name: 'ipad 2020 ',
-    detail: '99新',
-    price: 2000,
-    tag: 4,
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-  },
-  {
-    id: '004',
-    images: ['面霜.png', '面霜.png', '面霜.png'],
-    name: '宝宝面霜',
-    detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-    price: 20,
-    tag: 8,
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-  }
-])
-const showGoods = (goodId: string) => {
-  // console.log(goodId);
+const showGoods = async (goodsId: string) => {
   router.push({
     name: "GoodsItem",
     query: {
-      id: goodId
+      id: goodsId
     }
   })
 }
-const updateGoods = (goodsId: string) => {
+const onUpGoods = async (goods: Goods) => {
+  await upGoods(goods.id).then((res: any) => {
+    if (res.code === 200) {
+      Toast(res.msg)
+      goods.tag = 2
+    }
+  })
+}
+const onDownGoods = async (goods: Goods) => {
+  await downGoods(goods.id).then((res: any) => {
+    if (res.code === 200) {
+      Toast(res.msg)
+      goods.tag = 4
+    }
+  })
+}
+const onUpdateGoods = (goodsId: string) => {
   console.log('修改商品信息', goodsId);
-  router.push({
-    path: '/update',
-    query: {
-      goodsId: goodsId
-    }
-  })
+  if (getLocal('token') !== '') {
+    router.push({
+      path: '/update',
+      query: {
+        goodsId: goodsId
+      }
+    })
+  }
+
 }
-const downGoods = (goodsId: string) => {
-  console.log('下架',);
-}
-const upGoods = (goodsId: string) => {
-  console.log('上架', goodsId);
-}
+
+
 const getTag = (tag: number, btn: 1 | 2 | 3) => {
   if (tag === 1) { //新发布
     if (btn === 1 || btn === 3) {

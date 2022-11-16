@@ -66,15 +66,25 @@ class Request {
         })
     }
 //封装post请求
-    public post(url: string, options?: AxiosRequestConfig) {
+    public post(url: string, options?: AxiosRequestConfig,config?:any) {
+        if(config === undefined){
         return this.request({
             url: url,
             method: 'post',
             headers: {
-                'Content-Type':'application/json; charset=utf-8'
+                'Content-Type': 'application/json; charset=utf-8'
             },
             data: options
-        })
+        })}else{
+            return this.request({
+                url:url,
+                method: 'post',
+                headers: {
+                    'Content-Type': config
+                },
+                data: options
+            })
+        }
     }
     public put(url: string, options?: AxiosRequestConfig) {
         return this.request({

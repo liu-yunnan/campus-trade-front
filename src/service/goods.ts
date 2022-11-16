@@ -6,7 +6,7 @@ export function selectGoodsList(categoryId:number,keyword:string,pageNum:number 
   `)
 }
 export function pubGoods(params: AxiosRequestConfig<any> | undefined){
-  return http.post('/goods',params)
+  return http.post('/goods',params?.data)
 }
 
 export function getPubGoods(stateDate:number = -1,endDate:number = -1) {
@@ -17,7 +17,7 @@ export function getGoodsItem(goodsId:string) {
   return http.get(`/goods/${goodsId}`)
 }
 export function updateGoods(params: AxiosRequestConfig<any> | undefined, goodsId:string) {
-  return http.put(`/goods/${goodsId}`,params)
+  return http.put(`/goods/${goodsId}`,params?.data)
 }
 export function downGoods( goodsId:string) {
   return http.put(`/goods/${goodsId}/pull-off`)

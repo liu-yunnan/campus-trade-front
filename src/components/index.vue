@@ -59,7 +59,7 @@
       <p class="guessUlike">
         <img src="@/assets/img/猜你喜欢.webp" alt="">
       </p>
-      <GoodsList></GoodsList>
+      <GoodsList ref="goodsList"></GoodsList>
     </div>
 
   </div>
@@ -106,6 +106,14 @@ export default defineComponent({
     const goToPublish = () => {
       router.push({ path: '/publishGoods' })
     }
+
+    /**
+     * 
+     */
+    const goodsList = ref<any>(null)
+    onMounted(() => {
+      goodsList.value.onSearch("", -1)
+    })
     const goTo = (r: any, query?: any) => router.push({ path: r, query: query || {} })
     return {
       images,
@@ -115,11 +123,8 @@ export default defineComponent({
       goTo,
       selectProduct,
       goToPublish,
-      // testL
+      goodsList,
     };
-  },
-  mounted: function () {
-    // this.testL()
   },
   components: { GoodsList }
 })

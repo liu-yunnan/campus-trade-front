@@ -5,11 +5,12 @@
       <!-- 用户 -->
       <div class="goodsitem_user">
         <div class="goodsitem_user_head">
-          <van-image round width=".4rem" height=".4rem" fit="cover" :src="good.user.head" />
+          <van-image round width=".4rem" height=".4rem" fit="cover" :src="goods.user.head" />
         </div>
         <div class="goodsitem_user_detail">
-          <p class="goodsitem_user_detail_name">{{ good.user.name }}</p>
-          <p class="goodsitem_user_detail_QQ">QQ: {{ good.user.tel }}</p>
+          <p class="goodsitem_user_detail_name">{{ goods.user.name }}</p>
+          <p class="goodsitem_user_detail_QQ">QQ: {{ goods.user.qq }}</p>
+          <p class="goodsitem_user_detail_QQ">tel: {{ goods.user.tel }}</p>
         </div>
       </div>
       <!-- 分割线 -->
@@ -18,16 +19,16 @@
       </van-divider>
       <!-- 商品详情 -->
       <div class="goodsitem_money">
-        <span>￥{{ good.price }}</span>
+        <span>￥{{ goods.price }}</span>
       </div>
 
       <div class="goodsitem_n">
-        <pre class="goodsitem_n_name">{{ good.name }}</pre>
-        <pre class="goodsitem_n_detail">{{ good.detail }}</pre>
+        <pre class="goodsitem_n_name">{{ goods.name }}</pre>
+        <pre class="goodsitem_n_detail">{{ goods.detail }}</pre>
       </div>
 
       <div class="goodsitem_image">
-        <img v-for="image in good.images" :src="image" :key="image" alt="" srcset="">
+        <img v-for="image in goods.images" :src="image" :key="image" alt="" srcset="">
       </div>
 
 
@@ -48,19 +49,21 @@
 </template>
 
 <script setup lang="ts">
+import { getGoodsItem } from '@/service/goods';
 import { areaList } from '@vant/area-data';
 import { Toast } from 'vant';
 import { LocationQueryValue } from 'vue-router';
 import router from '../../router';
 let route = useRoute();
-let id = route.query.id as LocationQueryValue
+let id = route.query.id as string
 type User = {
-  id: string,
+  // id: string,
   name: string,
   head: string,
-  tel: number
+  tel: string,
+  qq: string
 }
-type Good = {
+type Goods = {
   id: string
   images: Array<string>,
   name: string,
@@ -88,24 +91,41 @@ const submit = () => {
 const goToCart = () => {
   router.push({ name: 'Cart' })
 }
-const getGoods = (id: LocationQueryValue) => {
-  let good: Good = {
-    id: '002',
-    images: ['https://imgservice.suning.cn/uimg1/b2c/image/Qk4Wz2xVcIM3lNkEjjUiRQ.jpg_800w_800h_4e_80Q_is', 'https://imgservice.suning.cn/uimg1/b2c/image/V3VOqtKUO7XYdzD5T7pd3g.jpg_800w_800h_4e_80Q_is', 'https://imgservice.suning.cn/uimg1/b2c/image/Zr_Fg0gAWDwIeJ7oya7qeA.jpg_800w_800h_4e_80Q_is'],
-    name: '宝宝面霜',
-    detail: '宝宝面霜润肤保湿滋润婴童润肤霜 \n全新',
-    price: 20,
-    user: {
-      id: '5568',
-      name: 'Beauty',
-      head: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-      tel: 123456789
-    }
+const goods = ref<Goods>({
+  id: '',
+  images: [],
+  name: '',
+  detail: '',
+  price: 0,
+  user: {
+    // id: '5568',
+    name: '',
+    head: '',
+    tel: '',
+    qq: '',
   }
-  console.log(id);
-  return good
-}
-let good: Good = getGoods(id)
+});
+onMounted(
+  async () => {
+    console.log('zzz')
+    const { data } = await getGoodsItem(id)
+    goods.value = {
+      id: data.id,
+      images: data.images.map((pic: any) => pic = pic.url),
+      name: data.title,
+      detail: data.detail,
+      price: data.price,
+      user: {
+        name: data.username,
+        head: "https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg",
+        tel: data.tel,
+        qq: data.qq
+      }
+    }
+    console.log(data);
+  }
+)
+
 console.log(id);
 const onClickLeft = () => history.back();
 </script>
