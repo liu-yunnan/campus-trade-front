@@ -26,7 +26,10 @@ class Request {
                 config.headers['Authorization'] = token;
             }
             return config
-        })
+        },err => {
+            Toast('请求超时')
+            return Promise.reject(err);
+    })
         //响应拦截器
         instance.interceptors.response.use((res: any) => {
             if (res.status == 200 ) {
@@ -35,9 +38,6 @@ class Request {
                 return Promise.reject(res.data)
             }
         }, err => {
-            // console.log(err.message);
-            // console.error('error',err);
-            if(err.response){
                 switch (err.response.status) {
                     case 401:
                         Toast('用户信息过期，请重新登录')
@@ -45,13 +45,27 @@ class Request {
                             router.push('/login');
                         }, 1000);
                         break;
+                        case 404:
+                            Toast({
+                                message: '网络请求不存在！',
+                                duration: 1500,
+                                forbidClick: true,
+                            });
+                            router.replace({                            
+                                path: '/404',                            
+                                query: { 
+                                    redirect: router.currentRoute.value.fullPath
+                                }                        
+                            });
+                            break;
+                        case 500:
+                            Toast('服务器被吃了⊙﹏⊙∥')
+                            break;
                     default:
-                        Toast(err.response.data.msg)
+                        Toast('未知错误')
                         break;
                 }
-            }
-            
-            return Promise.reject(err);
+                return Promise.reject(err);
         })
     }
 //封装get请求

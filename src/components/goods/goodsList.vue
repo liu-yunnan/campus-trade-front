@@ -29,6 +29,7 @@
 import { Toast } from 'vant';
 import router from '../../router';
 import { selectGoodsList } from '@/service/goods'
+import { addGoodsToCart } from '@/service/cart'
 import { computePrice } from '@/common/common'
 type Goods = {
   id: string,
@@ -67,12 +68,18 @@ const state = reactive({
   finished: false, //加载与不加载的状态
 })
 
-const addGood = (goodsId: string) => {
-
-  console.log(goodsId);
+const addGood = async (goodsId: string) => {
+  await addGoodsToCart(goodsId).then((res: any) => {
+    if (res.data === true) {
+      Toast(res.msg)
+    } else {
+      Toast('商品已加购，不能重复加购')
+    }
+  }).catch((err: any) => {
+    Toast(err.msg)
+  })
 }
 const showGoods = (goodsId: string) => {
-  // console.log(goodId);
   router.push({
     name: "GoodsItem",
     query: {
@@ -109,7 +116,7 @@ const onRefresh = () => {
   state.pageData.pageNumber = 0 //起始为第一页
   state.finished = false; //加载与不加载的状态
   state.list = new Array<Goods>()
-  console.log("refresh", state.pageData.pageNumber);
+  // console.log("refresh", state.pageData.pageNumber);
   setTimeout(() => {
     state.isLoading = false; //下拉刷新状态
     getGoodsList() //刷新成功调用列表方法
@@ -118,7 +125,7 @@ const onRefresh = () => {
 };
 // 上拉加载
 const onLoad = async () => {
-  console.log("load", state.pageData.pageNumber);
+  // console.log("load", state.pageData.pageNumber);
   setTimeout(() => {
     getGoodsList()
   }, 700)
@@ -131,7 +138,7 @@ const onLoad = async () => {
   justify-content: left;
   flex-wrap: wrap;
   background: #f6f6f6;
-  padding-bottom: .7rem;
+  padding-bottom: .4rem;
   padding-top: .08rem;
   min-height: 4.5rem;
 

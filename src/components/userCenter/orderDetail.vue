@@ -7,7 +7,7 @@
         订单地址
       </van-divider>
       <div class="user">
-        <div class="user_name">姓名：{{ state.order.userName }}</div>
+        <!-- <div class="user_name">姓名：{{ state.order.userName }}</div> -->
         <div class="user_tel">电话：{{ state.order.tel }}</div>
         <div class="user_address">收件地址：{{ state.order.address }}</div>
       </div>
@@ -29,23 +29,22 @@
           </div>
         </div>
         <van-card v-for="item in state.order.goodsList" :key="item.id" :price="item.price" :desc="item.detail"
-          :title="item.name" :thumb="getImageUrl(item.images[0])" @click="showGoods(item.id)">
+          :title="item.name" :thumb="item.images" @click="showGoods(item.id)">
           <template #price-top>
             <div>{{ item.date }}</div>
           </template>
         </van-card>
         <div class="footer">
           <div class="footer_price">
-            ￥{{ state.order.totalPrice }}
+            ￥{{ state.order.totalPrice / 100 }}
           </div>
           <div class="footer_btn">
             <!-- 支付 -->
-            <van-button :disabled="getTag(state.order.tag)" color="#ffdb46" type="primary" size="mini"
-              @click="dialog(state.order.orderId)">
+            <van-button :disabled="getTag(state.order.tag)" color="#ffdb46" type="primary" size="mini" @click="dialog">
               支付
             </van-button>
             <!-- 取消订单 -->
-            <van-button :disabled="getTag(state.order.tag)" plain size="mini">取消订单
+            <van-button :disabled="getTag(state.order.tag)" @click="onCancelOrder" plain size="mini">取消订单
             </van-button>
           </div>
         </div>
@@ -55,14 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { Dialog } from 'vant';
+import { Dialog, Toast } from 'vant';
 import router from '../../router';
-
+import { cancelOrder, getOrderById, payOrder } from '@/service/order'
 const onClickLeft = () => history.back();
-
+let route = useRoute();
+const orderId = route.query.id as string
 const state = reactive({
   order: {
-    userName: 'DoKi',
     tel: '13000000000',
     address: '山西省太原市太原理工大学明向校区山西省太原市太原理工大学明向校区山西省太原市太原理工大学明向校区山西省太原市太原理工大学明向校区山西省太原市太原理工大学明向校区山西省太原市太原理工大学明向校区',
     orderId: '0001',
@@ -70,7 +69,7 @@ const state = reactive({
     tag: 0, //未支付0 已支付1 已取消2
     goodsList: [{
       id: '001',
-      images: ['ipad.jpeg'],
+      images: 'ipad.jpeg',
       name: 'ipad 2020 ',
       detail: '99新',
       price: 2000,
@@ -78,7 +77,7 @@ const state = reactive({
       date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
     }, {
       id: '002',
-      images: ['ipad.jpeg'],
+      images: 'ipad.jpeg',
       name: 'ipad 2020 ',
       detail: '99新',
       price: 2000,
@@ -86,7 +85,7 @@ const state = reactive({
       date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
     }, {
       id: '003',
-      images: ['ipad.jpeg'],
+      images: 'ipad.jpeg',
       name: 'ipad 2020 ',
       detail: '99新',
       price: 2000,
@@ -96,25 +95,47 @@ const state = reactive({
     totalPrice: 4000,
   }
 })
-const getOrder = () => {
-  let route = useRoute();
-  const orderId = route.query.id
-  console.log(orderId);
+const formatDate = (date: any) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+const getOrder = async () => {
+  // console.log(orderId);
+  const { data } = await getOrderById(orderId)
+  console.log('data', data);
+  state.order = {
+    tel: data.phone,
+    address: data.province + ' ' + data.city + ' ' + data.district + ' ' + data.addressDetail,
+    orderId: data.id + '',
+    date: formatDate(new Date(data.createTime)) + ' ' + new Date(data.createTime).getHours() + ':' + new Date(data.createTime).getMinutes() + ':' + new Date(data.createTime).getSeconds(),
+    tag: data.orderStatus, //未支付0 已支付1 已取消2
+    goodsList: data.goodsSnapshotDTO.map((goods: any) => goods = {
+      id: goods.id,
+      images: goods.picture,
+      name: goods.title,
+      detail: goods.detail,
+      price: goods.amount,
+      tag: goods.goodsStatus,
+      date: goods.publishDate,
+    }),
+    totalPrice: data.orderAmount,
+  }
 }
-const getImageUrl = (name: string) => {
-  return new URL(`/src/assets/img/${name}`, import.meta.url).href;
-};
-const dialog = (id: string) => {
+onMounted(() => {
+  getOrder()
+})
+const dialog = () => {
   Dialog.confirm({
     message:
       '支付之后不可取消，确认支付订单吗？',
-  })
-    .then(() => {
-      console.log('已支付', id);
-    })
-    .catch(() => {
-      // on cancel
-    });
+  }).then(async () => {
+    const data = await payOrder(orderId, 3)
+    getOrder()
+    Toast(data.msg)
+  }).catch(() => {
+    // on cancel
+  });
+}
+const onCancelOrder = async () => {
+  const data = await cancelOrder(orderId)
+  Toast(data.msg)
 }
 const getTag = (tag: number) => {
   // btn 1：支付 2:取消订单

@@ -10,7 +10,7 @@
         <div class="goodsitem_user_detail">
           <p class="goodsitem_user_detail_name">{{ goods.user.name }}</p>
           <p class="goodsitem_user_detail_QQ">QQ: {{ goods.user.qq }}</p>
-          <p class="goodsitem_user_detail_QQ">tel: {{ goods.user.tel }}</p>
+          <p class="goodsitem_user_detail_QQ"> Tel: {{ goods.user.tel }}</p>
         </div>
       </div>
       <!-- 分割线 -->
@@ -32,7 +32,7 @@
         <img v-for="image in goods.images" :src="image" :key="image" alt="" srcset="">
       </div>
 
-      <div class="goodsitem_finally_text">没有更多了~</div>
+      <!-- <div class="goodsitem_finally_text">没有更多了~</div> -->
     </div>
     <van-action-bar>
       <!-- <van-action-bar-icon icon="chat-o" text="聊一聊" /> -->
@@ -52,8 +52,10 @@
 import { getGoodsItem } from '@/service/goods';
 import { areaList } from '@vant/area-data';
 import { Toast } from 'vant';
-import { computePrice } from '@/common/common'
+import { computePrice, getLocal } from '@/common/common'
 import router from '../../router';
+import { addGoodsToCart } from '@/service/cart';
+import { creatOrder } from '@/service/order';
 let route = useRoute();
 let id = route.query.id as string
 type User = {
@@ -71,26 +73,6 @@ type Goods = {
   price: number,
   user: User,
 }
-const show = ref(false);
-const onSave = (content: any) => {
-  Toast('save');
-  console.log(id);
-  console.log(content);
-  show.value = !show.value; //如果成功，则关闭弹窗
-}
-const showPopup = () => {
-  show.value = true;
-};
-const addGoods = () => {
-  console.log(id);
-}
-const submit = () => {
-  console.log(id);
-  showPopup()
-}
-const goToCart = () => {
-  router.push({ name: 'Cart' })
-}
 const goods = ref<Goods>({
   id: '',
   images: [],
@@ -107,7 +89,7 @@ const goods = ref<Goods>({
 });
 onMounted(
   async () => {
-    console.log('zzz')
+    // console.log('zzz')
     const { data } = await getGoodsItem(id)
     goods.value = {
       id: data.id,
@@ -122,11 +104,55 @@ onMounted(
         qq: data.qq
       }
     }
-    console.log(data);
+    // console.log(data);
   }
 )
 
-console.log(id);
+const show = ref(false);
+const onSave = async (content: any) => {
+  // console.log("选中商品", state.selected);
+  // console.log("下单人信息", content);
+  await creatOrder({
+    data: {
+      addressDetail: content.addressDetail,
+      city: content.city,
+      district: content.county, //区
+      goodsIds: [id],
+      phone: content.tel,
+      province: content.province,
+    }
+  })
+  Toast('save');
+  show.value = !show.value; //如果成功，则关闭弹窗
+}
+const showPopup = () => {
+  show.value = true;
+};
+const addGoods = async () => {
+  await addGoodsToCart(id).then((res: any) => {
+    console.log('addGoods', res.data);
+    if (res.data === true) {
+      Toast(res.msg)
+    } else {
+      Toast('商品已加购，不能重复加购')
+    }
+  }).catch((err: any) => {
+    Toast(err.msg)
+  })
+}
+const submit = () => {
+  // console.log(id);
+  showPopup()
+}
+const goToCart = () => {
+  if (getLocal('token') !== '') {
+    router.push({ name: 'Cart' })
+  } else {
+    router.push({ name: 'Login' })
+  }
+}
+
+// console.log(id);
 const onClickLeft = () => history.back();
 </script>
 

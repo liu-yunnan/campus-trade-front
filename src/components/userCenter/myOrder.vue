@@ -19,23 +19,23 @@
           {{ order.date }}
         </div>
       </div>
-      <van-card v-for="item in order.goodsList" :key="item.id" :price="item.price.toFixed(2)" :desc="item.detail"
-        :title="item.name" :thumb="getImageUrl(item.images[0])">
+      <van-card v-for="item in order.goodsList" :key="item.id" :price="(item.price / 100).toFixed(2)"
+        :desc="item.detail" :title="item.name" :thumb="item.images">
         <template #price-top>
           <div>{{ item.date }}</div>
         </template>
       </van-card>
       <div class="footer">
         <div class="footer_price">
-          <span class="footer_price_integer">￥{{ computePrice(order.totalPrice, 1) }}</span>
-          <span class="footer_price_decimal">.{{ computePrice(order.totalPrice, 2) }}</span>
+          <span class="footer_price_integer">￥{{ computePrice(order.totalPrice / 100, 1) }}</span>
+          <span class="footer_price_decimal">.{{ computePrice(order.totalPrice / 100, 2) }}</span>
         </div>
         <div class="footer_btn">
           <van-button :disabled="getTag(order.tag)" color="#ffdb46" type="primary" size="mini"
-            @click="dialog(order.orderId)">
+            @click.stop="dialog(order.orderId)">
             支付
           </van-button>
-          <van-button :disabled="getTag(order.tag)" plain size="mini">取消订单
+          <van-button :disabled="getTag(order.tag)" plain size="mini" @click.stop="onCancelOrder(order.orderId)">取消订单
           </van-button>
         </div>
       </div>
@@ -46,94 +46,108 @@
 
 <script setup lang="ts">
 import router from '../../router';
-import { Dialog } from 'vant';
+import { Dialog, Toast } from 'vant';
 import { computePrice } from '@/common/common'
-const getImageUrl = (name: string) => {
-  return new URL(`/src/assets/img/${name}`, import.meta.url).href;
-};
+import { getOrderList, payOrder, cancelOrder } from '@/service/order'
+
 const state = reactive({
+  // orderList: [{
+  //   orderId: '0001',
+  //   date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+  //   tag: 2, //未支付0 已支付1 已取消2
+  //   goodsList: [{
+  //     id: '001',
+  //     images: ['ipad.jpeg'],
+  //     name: 'ipad 2020 ',
+  //     detail: '99新',
+  //     price: 2000,
+  //     tag: 1,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   }],
+  //   totalPrice: 4000,
+  // },
+  // {
+  //   orderId: '0002',
+  //   date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+  //   tag: 1, //未支付0 已支付1 已取消2
+  //   goodsList: [{
+  //     id: '001',
+  //     images: ['ipad.jpeg'],
+  //     name: 'ipad 2020 ',
+  //     detail: '99新',
+  //     price: 2000,
+  //     tag: 1,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   },
+  //   {
+  //     id: '002',
+  //     images: ['面霜.png', '面霜.png', '面霜.png'],
+  //     name: '宝宝面霜',
+  //     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
+  //     price: 20,
+  //     tag: 0,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   },
+  //   {
+  //     id: '003',
+  //     images: ['ipad.jpeg'],
+  //     name: 'ipad 2020 ',
+  //     detail: '99新',
+  //     price: 2000,
+  //     tag: 2,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   },
+  //   {
+  //     id: '004',
+  //     images: ['面霜.png', '面霜.png', '面霜.png'],
+  //     name: '宝宝面霜',
+  //     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
+  //     price: 20,
+  //     tag: 3,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   }],
+  //   totalPrice: 200,
+  // },
+  // {
+  //   orderId: '0003',
+  //   date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+  //   tag: 0, //未支付0 已支付1 已取消2
+  //   goodsList: [{
+  //     id: '001',
+  //     images: ['ipad.jpeg'],
+  //     name: 'ipad 2020 ',
+  //     detail: '99新',
+  //     price: 2000,
+  //     tag: 1,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   },
+  //   {
+  //     id: '002',
+  //     images: ['面霜.png', '面霜.png', '面霜.png'],
+  //     name: '宝宝面霜',
+  //     detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
+  //     price: 20,
+  //     tag: 0,
+  //     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+  //   },],
+  //   totalPrice: 40,
+  // },
+  // ],
   orderList: [{
-    orderId: '0001',
+    orderId: '',
     date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
     tag: 2, //未支付0 已支付1 已取消2
     goodsList: [{
-      id: '001',
-      images: ['ipad.jpeg'],
-      name: 'ipad 2020 ',
-      detail: '99新',
-      price: 2000,
+      id: '',
+      images: '',
+      name: '',
+      detail: '',
+      price: 0,
       tag: 1,
       date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
     }],
-    totalPrice: 4000,
-  },
-  {
-    orderId: '0002',
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-    tag: 1, //未支付0 已支付1 已取消2
-    goodsList: [{
-      id: '001',
-      images: ['ipad.jpeg'],
-      name: 'ipad 2020 ',
-      detail: '99新',
-      price: 2000,
-      tag: 1,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    },
-    {
-      id: '002',
-      images: ['面霜.png', '面霜.png', '面霜.png'],
-      name: '宝宝面霜',
-      detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-      price: 20,
-      tag: 0,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    },
-    {
-      id: '003',
-      images: ['ipad.jpeg'],
-      name: 'ipad 2020 ',
-      detail: '99新',
-      price: 2000,
-      tag: 2,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    },
-    {
-      id: '004',
-      images: ['面霜.png', '面霜.png', '面霜.png'],
-      name: '宝宝面霜',
-      detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-      price: 20,
-      tag: 3,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    }],
-    totalPrice: 200,
-  },
-  {
-    orderId: '0003',
-    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-    tag: 0, //未支付0 已支付1 已取消2
-    goodsList: [{
-      id: '001',
-      images: ['ipad.jpeg'],
-      name: 'ipad 2020 ',
-      detail: '99新',
-      price: 2000,
-      tag: 1,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    },
-    {
-      id: '002',
-      images: ['面霜.png', '面霜.png', '面霜.png'],
-      name: '宝宝面霜',
-      detail: '宝宝面霜润肤保湿滋润婴童润肤霜',
-      price: 20,
-      tag: 0,
-      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
-    },],
-    totalPrice: 40,
-  },
-  ],
+    totalPrice: 0,
+  },],
   timeArr: '',
   show: false,
 })
@@ -142,17 +156,18 @@ const onConfirm = (values: [any, any]) => {
   const [start, end] = values;
   state.show = false;
   state.timeArr = `${formatDate(start)} - ${formatDate(end)}`;
-  // 获取日期区间的订单
+  init(Date.parse(formatDate(start)), Date.parse(formatDate(end)))
 };
 // 支付确认
 const dialog = (id: string) => {
   Dialog.confirm({
     message:
       '支付之后不可取消，确认支付订单吗？',
+  }).then(async () => {
+    const data = await payOrder(id, 3)
+    init()
+    Toast(data.msg)
   })
-    .then(() => {
-      console.log('已支付', id);
-    })
     .catch(() => {
       // on cancel
     });
@@ -180,7 +195,51 @@ const showOrder = (id: string) => {
     }
   })
 }
+const onCancelOrder = async (id: string) => {
+  const data = await cancelOrder(id)
+  Toast(data.msg)
+}
+const init = async (startTime?: number, endTime?: number) => {
+  let data: any;
+  if (startTime === undefined && endTime === undefined) {
+    data = await getOrderList({
+      data: {
+        pageNo: 1,
+        pageSize: 100,
+      }
+    })
 
+  } else {
+    data = await getOrderList({
+      data: {
+        startTime: startTime,
+        endTime: endTime,
+        pageNo: 1,
+        pageSize: 100,
+      }
+    })
+  }
+  console.log(data.data);
+  state.orderList = data.data.result.map((item: any) => item = {
+    orderId: item.id + '',
+    date: formatDate(new Date(item.createTime)) + ' ' + new Date(item.createTime).getHours() + ':' + new Date(item.createTime).getMinutes() + ':' + new Date(item.createTime).getSeconds(),
+    tag: item.orderStatus, //未支付0 已支付1 已取消2
+    totalPrice: item.orderAmount,
+    goodsList: item.goodsSnapshotDTO.map((goods: any) => goods = {
+      id: goods.id,
+      images: goods.picture,
+      name: goods.title,
+      detail: goods.detail,
+      price: goods.amount,
+      tag: goods.goodsStatus,
+      date: goods.publishDate
+    }),
+  })
+
+}
+onMounted(() => {
+  init()
+})
 const onClickLeft = () => history.back();
 </script>
  
