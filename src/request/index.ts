@@ -45,22 +45,25 @@ class Request {
                             router.push('/login');
                         }, 1000);
                         break;
-                        case 404:
-                            Toast({
-                                message: '网络请求不存在！',
-                                duration: 1500,
-                                forbidClick: true,
-                            });
-                            router.replace({                            
-                                path: '/404',                            
-                                query: { 
-                                    redirect: router.currentRoute.value.fullPath
-                                }                        
-                            });
-                            break;
-                        case 500:
-                            Toast('服务器被吃了⊙﹏⊙∥')
-                            break;
+                    case 404:
+                        Toast({
+                            message: '网络请求不存在！',
+                            duration: 1500,
+                             forbidClick: true,
+                        });
+                        router.replace({                            
+                            path: '/404',                            
+                            query: { 
+                                redirect: router.currentRoute.value.fullPath
+                            }                        
+                        });
+                        break;
+                    case 418:
+                        Toast(err.response.data.msg)
+                        break;
+                    case 500:
+                        Toast('服务器被吃了⊙﹏⊙∥')
+                        break;
                     default:
                         Toast('未知错误')
                         break;
