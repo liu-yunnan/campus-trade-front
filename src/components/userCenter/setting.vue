@@ -17,6 +17,7 @@ import { logout } from '@/service/loginRegister'
 import { setLocal } from '@/common/common';
 import { editUserInfo, getUserInfo } from '@/service/user'
 import { Toast } from 'vant';
+import router from '@/router';
 const state = reactive({
   userName: '',
   QQ: '',
@@ -45,7 +46,7 @@ const save = async () => {
 const handleLogout = async () => {
   await logout()
   setLocal('token', '')
-  window.location.href = '/'
+  router.push({ path: '/' })
 }
 </script>
 
