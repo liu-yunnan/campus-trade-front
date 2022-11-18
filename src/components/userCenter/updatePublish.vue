@@ -7,7 +7,7 @@
       <van-cell-group inset>
         <van-field v-model="state.goodsName" label="商品名称" name="goodsName" placeholder="请输入商品名称" />
         <van-field v-model="state.price" type="number" label="商品价格" name="price" placeholder="请输入商品价格" />
-        <van-field name="uploader" label="文件上传">
+        <van-field name="uploader" label="图片上传">
           <template #input>
             <van-uploader v-model="state.images" :after-read="afterRead" @delete="onDeleteImg" />
           </template>
@@ -40,7 +40,6 @@ import { Toast } from 'vant';
 
 let route = useRoute();
 const goodsId = route.query.goodsId as string
-console.log(goodsId);
 const state = reactive({
   goodsName: '',
   detail: '',
@@ -51,8 +50,8 @@ const state = reactive({
   categoryName: '',
 })
 const onSubmit = async (content: any) => {
-  console.log('state', state);
-  console.log('content', content);
+  //console.log('state', state);
+  //console.log('content', content);
   const getImgIds = (arr: Array<any>) => {
     return arr.map(item => item = item.id)
   }
@@ -92,7 +91,7 @@ const columnsFieldName = {
   children: 'children'
 }
 const onConfirm = (value: any) => {
-  console.log('onConfirm ', value[2].categoryId);
+  //console.log('onConfirm ', value[2].categoryId);
   state.categoryId = value[2].categoryId;
   state.categoryName = value[2].categoryName
   showPicker.value = false;
@@ -101,7 +100,7 @@ const onShowPicker = async () => {
   showPicker.value = true
   const { data } = await getCategries()
   category.value = data
-  console.log(category);
+  //console.log(category);
 }
 
 // 图片上传
@@ -110,7 +109,7 @@ const afterRead = async (file: any) => {
   img.append('file', file.file)
 
   postImg({ data: { img } }, "multipart/form-data").then((res: any) => {
-    console.log('res', res);
+    //console.log('res', res);
     if (res.code === 200) {
       state.uploadImg.push({
         id: res.data.id,
@@ -119,15 +118,15 @@ const afterRead = async (file: any) => {
         size: file.file.size,
         lastModified: file.file.lastModified,
       })
-      console.log('upload', state.uploadImg);
-      console.log('images', state.images);
+      //console.log('upload', state.uploadImg);
+      //console.log('images', state.images);
     }
   })
-  console.log(file);
+  //console.log(file);
 };
 // 删除图片
 const onDeleteImg = (file: any) => {
-  console.log(file.file);
+  //console.log(file.file);
   for (let i = 0; i < state.uploadImg.length; i++) {
     if (file.file.name === state.uploadImg[i].name
       && file.file.size === state.uploadImg[i].size
@@ -136,8 +135,8 @@ const onDeleteImg = (file: any) => {
       break
     }
   }
-  console.log('upload', state.uploadImg);
-  console.log('images', state.images);
+  //console.log('upload', state.uploadImg);
+  //console.log('images', state.images);
 }
 // 返回上层
 const onClickLeft = () => history.back();

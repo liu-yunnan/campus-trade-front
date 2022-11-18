@@ -6,19 +6,18 @@
       <van-sidebar-item v-for="item in Categories" :title="item.categoryName" :key="item.categoryId"></van-sidebar-item>
     </van-sidebar> -->
     <div class="search-wrap" ref="searchWrap">
-      <list-scroll :scroll-data="state.categoryData" class="nav-side-wrapper">
+      <div class="nav-side-wrapper">
         <ul class="nav-side">
           <li v-for="item in state.categoryData" :key="item.categoryId" v-text="item.categoryName"
             :class="{ 'active': state.currentIndex == item.categoryId }" @click="selectMenu(item.categoryId)"></li>
         </ul>
-      </list-scroll>
+      </div>
       <div class="search-content">
-        <list-scroll :scroll-data="state.categoryData">
+        <div>
           <div class="swiper-container">
             <div class="swiper-wrapper">
               <template v-for="(category, index) in state.categoryData">
                 <div class="swiper-slide" v-if="state.currentIndex == category.categoryId" :key="index">
-                  <!-- <img class="category-main-img" :src="category.mainImgUrl" v-if="category.mainImgUrl"/> -->
                   <div class="category-list" v-for="(products, index) in category.children" :key="index">
                     <p class="catogory-title">{{ products.categoryName }}</p>
                     <div class="product-item" v-for="(product, index) in products.children" :key="index"
@@ -31,7 +30,7 @@
               </template>
             </div>
           </div>
-        </list-scroll>
+        </div>
       </div>
     </div>
   </div>
@@ -61,11 +60,12 @@ const state = reactive({
 onMounted(async () => {
   const { data } = await getCategries()
   state.categoryData = data
-  console.log(state.categoryData);
+  // console.log(state.categoryData);
 })
 const selectProduct = (item: Category) => {
-  console.log('item', item.categoryId)
-  router.push({ path: '/search', query: { categoryId: item.categoryId } })
+  // console.log('item', item.categoryId)
+  let id = item.categoryId
+  router.push({ path: '/search', query: { categoryId: id } })
 }
 const selectMenu = (index: number) => {
   state.currentIndex = index

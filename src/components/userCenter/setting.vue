@@ -40,17 +40,12 @@ const save = async () => {
   }
   await editUserInfo({ data: params })
   Toast.success('保存成功')
-  console.log('保存');
 }
 
 const handleLogout = async () => {
-  const result = await logout()
-  console.log(result);
-  // if (resultCode == 200) {
+  await logout()
   setLocal('token', '')
   window.location.href = '/'
-  // }
-  console.log('退出登录');
 }
 </script>
 

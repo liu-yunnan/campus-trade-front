@@ -136,7 +136,6 @@ const onDownGoods = async (goods: Goods) => {
   })
 }
 const onUpdateGoods = (goodsId: string) => {
-  console.log('修改商品信息', goodsId);
   if (getLocal('token') !== '') {
     router.push({
       path: '/update',

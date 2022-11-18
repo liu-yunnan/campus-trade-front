@@ -223,7 +223,6 @@ const init = async (startTime?: number, endTime?: number) => {
       }
     })
   }
-  console.log(data.data);
   state.orderList = data.data.result.map((item: any) => item = {
     orderId: item.id + '',
     date: formatDate(new Date(item.createTime)) + ' ' + new Date(item.createTime).getHours() + ':' + new Date(item.createTime).getMinutes() + ':' + new Date(item.createTime).getSeconds(),

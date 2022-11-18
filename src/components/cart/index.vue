@@ -111,12 +111,12 @@ const showPopup = () => {
 };
 const onSubmit = () => {
   if (state.selected.length > 0) {
-    console.log('提交');
-    console.log(state.selected);
+    // console.log('提交');
+    // console.log(state.selected);
     showPopup()
   } else {
     Toast('未选中任何商品')
-    console.log('未选中商品');
+    // console.log('未选中商品');
   }
 }
 const setStatus = (status: 1 | 2 | 4 | 8) => {

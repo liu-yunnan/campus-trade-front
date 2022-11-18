@@ -73,7 +73,7 @@ const onSubmit = async (values: { username: any; password: any; username1: any; 
       }
     })
     setLocal('token', data.token)
-    console.log('登录');
+    // console.log('登录');
     // 需要刷新页面，否则 axios.js 文件里的 token 不会被重置
     window.location.href = '/'
   } else {
@@ -109,7 +109,7 @@ const onSubmit = async (values: { username: any; password: any; username1: any; 
         "password": values.password1
       }
     })
-    console.log('用户名密码：', values.username1, values.password1);
+    // console.log('用户名密码：', values.username1, values.password1);
     Toast.success('注册成功')
     state.type = 'login'
   }

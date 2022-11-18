@@ -1,9 +1,14 @@
 <script setup lang="ts">
 
+const key = computed(() => {
+  let route = useRoute()
+  // console.log('路由key', route.path + Math.random());
+  return route.path + Math.random()
+})
 </script>
 
 <template>
-  <router-view />
+  <router-view :key="key" />
   <Footer></Footer>
 </template>
 

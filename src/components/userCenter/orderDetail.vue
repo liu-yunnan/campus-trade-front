@@ -97,9 +97,7 @@ const state = reactive({
 })
 const formatDate = (date: any) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 const getOrder = async () => {
-  // console.log(orderId);
   const { data } = await getOrderById(orderId)
-  console.log('data', data);
   state.order = {
     tel: data.phone,
     address: data.province + ' ' + data.city + ' ' + data.district + ' ' + data.addressDetail,

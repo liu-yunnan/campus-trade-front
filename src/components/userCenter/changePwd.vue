@@ -80,7 +80,6 @@ const onSubmit = async () => {
       originPassword: user.password
     }
   })
-  console.log(data);
   if (data.code === 200) {
     Toast.success(data.msg);//成功信息
     router.push({ name: 'Login' })
