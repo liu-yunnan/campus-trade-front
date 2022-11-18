@@ -27,10 +27,14 @@ const state = reactive({
 const onClickLeft = () => history.back();
 
 onMounted(async () => {
-  const { data } = await getUserInfo()
-  state.userName = data.username
-  state.QQ = data.qq
-  state.introduceSign = data.personSignature === null ? '这个人很懒，什么都没留下' : data.personSignature
+  await getUserInfo().then((res: any) => {
+    state.userName = res.data.username
+    state.QQ = res.data.qq
+    state.introduceSign = res.data.personSignature === null ? '这个人很懒，什么都没留下' : res.data.personSignature
+  }).catch((err: any) => {
+    // console.log(err.response);
+    return err.response
+  })
 })
 
 const save = async () => {
